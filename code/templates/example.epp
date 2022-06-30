@@ -1,0 +1,3 @@
+<% if  { -%>
+myvar has <%= $myvar %> value
+<% } -%>
