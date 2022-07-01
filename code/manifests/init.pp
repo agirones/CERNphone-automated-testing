@@ -1,3 +1,5 @@
+include 'docker'
+
 class hg_tone::mgmt::volts {
 
     docker::image { 'hello-world': }   
