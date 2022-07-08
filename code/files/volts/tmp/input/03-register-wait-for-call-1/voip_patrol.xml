@@ -1,0 +1,12 @@
+<config>
+    <actions>
+        <action disable="all" type="codec" />
+        <action enable="pcma" priority="250" type="codec" />
+        <action enable="pcmu" priority="249" type="codec" />
+        <action account="88881-31896" auth_username="88881-31896" expected_cause_code="200" label="Register 88881-31896" password="29816" realm="dev.tone.cern.ch" registrar="dev.tone.cern.ch" srtp="sdes,force" transport="tls" type="register" username="88881" />
+        <action complete="true" ms="2000" type="wait" />
+        <action call_count="1" code="200" hangup="10" label="Receive all calls" match_account="default" play="/voice_ref_files/8000_2m30.wav" reason="OK" rtp_stats="true" srtp="sdes,force" transport="tls" type="accept" />
+        <action auth_username="88882-13740" callee="##88881@dev.tone.cern.ch" caller="88882@dev.tone.cern.ch" expected_cause_code="200" from="sip:88882@dev.tone.cern.ch" hangup="10" label="Call to ##88881 from 88882" max_duration="20" max_ring_duration="15" password="27348" play="/voice_ref_files/8000_2m30.wav" realm="dev.tone.cern.ch" rtp_stats="true" srtp="sdes,force" to_uri="##88881@dev.tone.cern.ch" transport="tls" type="call" />
+        <action complete="true" ms="30000" type="wait" />
+    </actions>
+</config>

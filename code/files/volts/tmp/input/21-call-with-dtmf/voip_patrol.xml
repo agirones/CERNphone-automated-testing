@@ -1,0 +1,13 @@
+<config>
+    <actions>
+        <action disable="all" type="codec" />
+        <action enable="pcma" priority="250" type="codec" />
+        <action enable="pcmu" priority="249" type="codec" />
+        <action enable="opus" priority="248" type="codec" />
+        <action account="90002-21080" auth_username="90002-21080" expected_cause_code="200" label="Register 90002-21080" password="26445" realm="dev.tone.cern.ch" registrar="dev.tone.cern.ch" srtp="sdes,force" transport="tls" type="register" username="90002" />
+        <action complete="true" ms="2000" type="wait" />
+        <action call_count="1" code="200" hangup="10" label="Receive call on 90002-21080" match_account="90002-21080" play="/voice_ref_files/8000_2m30.wav" reason="OK" srtp="sdes,force" transport="tls" type="accept" />
+        <action auth_username="90001-22466" callee="90002,123,A3@dev.tone.cern.ch" caller="90001@dev.tone.cern.ch" expected_cause_code="200" from="sip:90001@dev.tone.cern.ch" hangup="10" label="Call 90001 -&gt; 90002" max_duration="20" max_ring_duration="15" password="28455" play="/voice_ref_files/8000_2m30.wav" realm="dev.tone.cern.ch" rtp_stats="true" srtp="sdes,force" to_uri="90002@dev.tone.cern.ch" transport="tls" type="call" />
+        <action complete="true" ms="30000" type="wait" />
+    </actions>
+</config>

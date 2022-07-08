@@ -1,0 +1,36 @@
+<!-- Test simple register -->
+<config>
+    <section type="database">
+        <actions>
+            <action database="kamdb" stage="pre">
+            <!-- <action database="kamdb" stage="pre"> -->
+                <!-- <table name="subscriber_a" type="replace">
+                    <field name="userid_1" value="{{ a.88881.username }}"/>
+                    <field name="userid_2" value="{{ a.88882.username }}"/>
+                </table> -->
+                <table name="subscriber" type="insert"  cleanup_after_test="true">
+                    <field name="username" value="{{ a.65825.username }}"/>
+                    <field name="domain" value="{{ c.domain }}"/>
+                    <field name="ha1" value="{{ a.65825.ha1 }}"/>
+                    <field name="password" value="dummy_data_here"/>
+                    <!-- <field name="time"     value="{% now 'utc' %}"/> -->
+                </table>
+            </action>
+        </actions>
+    </section>
+    <section type="voip_patrol">
+        <actions>
+            <action type="register" label="Register {{ a.65825.username }}"
+                transport="{{ a.65825.transport }}"
+                account="{{ a.65825.username }}"
+                username="{{ a.65825.label }}"
+                auth_username="{{ a.65825.username }}"
+                password="{{ a.65825.password }}"
+                registrar="{{ c.domain }}"
+                realm="{{ a.65825.domain }}"
+                expected_cause_code="200"
+            />
+            <action type="wait" complete="true" ms="2000"/>
+        </actions>
+    </section>
+</config>

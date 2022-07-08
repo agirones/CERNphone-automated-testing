@@ -1,0 +1,90 @@
+<!-- Register 90001, 90003 and make a call to team 90533, which have a 2 members - 90001, 90003 from 90001. Behavoir is call to 90533 endpoint -->
+<config>
+    <actions>
+        <action type="codec" disable="all"/>
+        <action type="codec" enable="pcma" priority="250"/>
+        <action type="codec" enable="pcmu" priority="249"/>
+        <action type="codec" enable="opus" priority="248"/>
+        <action type="register" label="Register {{ a.90003.username }}"
+            transport="{{ a.90003.transport }}"
+            account="{{ a.90003.username }}"
+            username="{{ a.90003.label }}"
+            auth_username="{{ a.90003.username }}"
+            password="{{ a.90003.password }}"
+            registrar="{{ c.domain }}"
+            realm="{{ c.domain }}"
+            expected_cause_code="200"
+            srtp="{{ a.90003.srtp }}"
+        />
+        <action type="register" label="Register {{ a.90001.username }}"
+            transport="{{ a.90001.transport }}"
+            account="{{ a.90001.username }}"
+            username="{{ a.90001.label }}"
+            auth_username="{{ a.90001.username }}"
+            password="{{ a.90001.password }}"
+            registrar="{{ c.domain }}"
+            realm="{{ c.domain }}"
+            expected_cause_code="200"
+            srtp="{{ a.90001.srtp }}"
+        />
+        <action type="register" label="Register {{ a.90533.username }}"
+            transport="{{ a.90533.transport }}"
+            account="{{ a.90533.username }}"
+            username="{{ a.90533.label }}"
+            auth_username="{{ a.90533.username }}"
+            password="{{ a.90533.password }}"
+            registrar="{{ c.domain }}"
+            realm="{{ c.domain }}"
+            expected_cause_code="200"
+            srtp="{{ a.90533.srtp }}"
+        />
+        <action type="wait" complete="true" ms="500"/>
+        <action type="accept" label="Not receive call on {{ a.90001.username }}"
+            match_account="{{ a.90001.username }}"
+            call_count="1"
+            hangup="10"
+            fail_on_accept="true"
+            code="200" reason="OK"
+            transport="{{ a.90001.transport }}"
+            srtp="{{ a.90001.srtp }}"
+            play="{{ c.play_file }}">
+        </action>
+        <action type="accept" label="Receive call on {{ a.90003.username }} but not answer"
+            match_account="{{ a.90003.username }}"
+            call_count="1"
+            hangup="10"
+            ring_duration="5"
+            cancel="force"
+            code="200" reason="OK"
+            transport="{{ a.90003.transport }}"
+            srtp="{{ a.90003.srtp }}"
+            play="{{ c.play_file }}">
+        </action>
+        <action type="accept" label="Receive call on {{ a.90533.username }} and answer"
+            match_account="{{ a.90533.username }}"
+            call_count="1"
+            hangup="10"
+            ring_duration="3"
+            code="200" reason="OK"
+            transport="{{ a.90533.transport }}"
+            srtp="{{ a.90533.srtp }}"
+            play="{{ c.play_file }}">
+        </action>
+        <action type="call" label="Call from team member {{ a.90001.label }} -> 90533"
+            transport="{{ a.90001.transport }}"
+            expected_cause_code="200"
+            caller="{{ a.90001.label }}@{{ c.domain }}"
+            callee="90533@{{ c.domain }}"
+            from="sip:{{ a.90001.label }}@{{ c.domain }}"
+            to_uri="90533@{{ c.domain }}"
+            max_duration="20" hangup="10"
+            auth_username="{{ a.90001.username }}"
+            password="{{ a.90001.password }}"
+            realm="{{ c.domain }}"
+            max_ring_duration="15"
+            srtp="{{ a.90001.srtp }}"
+            play="{{ c.play_file }}"
+        />
+        <action type="wait" complete="true" ms="20000"/>
+    </actions>
+</config>

@@ -1,0 +1,48 @@
+<!-- Register 90003 and make a call to team 90503, which have a single member - 90003 with control of CLID-->
+<config>
+    <actions>
+        <action type="codec" disable="all"/>
+        <action type="codec" enable="pcma" priority="250"/>
+        <action type="codec" enable="pcmu" priority="249"/>
+        <action type="codec" enable="opus" priority="248"/>
+        <action type="register" label="Register {{ a.90003.username }}"
+            transport="{{ a.90003.transport }}"
+            account="{{ a.90003.username }}"
+            username="{{ a.90003.label }}"
+            auth_username="{{ a.90003.username }}"
+            password="{{ a.90003.password }}"
+            registrar="{{ c.domain }}"
+            realm="{{ c.domain }}"
+            expected_cause_code="200"
+            srtp="{{ a.90003.srtp }}"
+        />
+        <action type="wait" complete="true" ms="2000"/>
+        <action type="accept" label="Receive call on {{ a.90003.username }}"
+            match_account="{{ a.90003.username }}"
+            call_count="1"
+            hangup="10"
+            ring_duration="1"
+            code="200" reason="OK"
+            transport="{{ a.90003.transport }}"
+            srtp="{{ a.90003.srtp }}"
+            play="{{ c.play_file }}">
+            <check-header name="From" regex="^.*Team: {{ a.90001.label }} via 90503.*sip:\+412276{{ a.90001.label }}@.*$"/>
+        </action>
+        <action type="call" label="Call {{ a.90001.label }} -> 90503"
+            transport="{{ a.90001.transport }}"
+            expected_cause_code="200"
+            caller="{{ a.90001.label }}@{{ c.domain }}"
+            callee="90503@{{ c.domain }}"
+            from="sip:{{ a.90001.label }}@{{ c.domain }}"
+            to_uri="90503@{{ c.domain }}"
+            max_duration="20" hangup="10"
+            auth_username="{{ a.90001.username }}"
+            password="{{ a.90001.password }}"
+            realm="{{ c.domain }}"
+            max_ring_duration="15"
+            srtp="{{ a.90001.srtp }}"
+            play="{{ c.play_file }}"
+        />
+        <action type="wait" complete="true" ms="30000"/>
+    </actions>
+</config>

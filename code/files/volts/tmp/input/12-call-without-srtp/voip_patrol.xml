@@ -1,0 +1,10 @@
+<config>
+    <actions>
+        <action disable="all" type="codec" />
+        <action enable="pcma" priority="250" type="codec" />
+        <action enable="pcmu" priority="249" type="codec" />
+        <action enable="opus" priority="248" type="codec" />
+        <action auth_username="90001-22466" callee="11111@dev.tone.cern.ch" caller="90001@dev.tone.cern.ch" expected_cause_code="488" from="sip:90001@dev.tone.cern.ch" hangup="10" label="Call 90001 -&gt; 11111" max_duration="20" max_ring_duration="15" password="28455" play="/voice_ref_files/8000_2m30.wav" realm="dev.tone.cern.ch" rtp_stats="true" srtp="none" to_uri="11111@dev.tone.cern.ch" transport="tls" type="call" />
+        <action complete="true" ms="30000" type="wait" />
+    </actions>
+</config>

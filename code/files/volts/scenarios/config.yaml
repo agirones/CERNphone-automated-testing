@@ -1,0 +1,82 @@
+global:
+  domain:           'dev.tone.cern.ch'
+  transport:        'tls'
+  srtp:             'sdes,force'
+  play_file:        '/voice_ref_files/8000_2m30.wav'
+  asterisk_context: 'cern_users'
+databases:
+  'kamdb':
+    type:       'mysql'
+    user:       'kamailioremote_dev'
+    password:   'mZbFkbSC99QBn*J9YjL%FuUBb'
+    base:       'kamailio'
+    host:       'fe-0513-2-dev.cern.ch'
+  'astdb':
+    type:       'mysql'
+    user:       'asterisk_dev'
+    password:   '8T4nxb*3H2Ln*&C2ne2BQLXgf'
+    base:       'asterisk'
+    host:       're-0513-2-dev.cern.ch'
+  'astdb_users':
+    type:       'mysql'
+    user:       'asterisk_dev'
+    password:   '8T4nxb*3H2Ln*&C2ne2BQLXgf'
+    base:       'userids'
+    host:       're-0513-2-dev.cern.ch'
+accounts:
+  '88881':
+    username: '88881-31896'
+    password: '29816'
+  '88882':
+    username: '88882-13740'
+    password: '27348'
+  '88883':
+    username: '88883-24018'
+    password: '17256'
+  '90001':
+    username: '90001-22466'
+    password: '28455'
+  '90002':
+    username: '90002-21080'
+    password: '26445'
+  '90002-58724':
+    id:       '90002'
+    username: '90002-58724'
+    password: '45021'
+  '90003':
+    username: '90003-20614'
+    password: '16852'
+  '90510':
+    username: '90510-67813'
+    password: '08478'
+  '90502':
+    username: '90502-58167'
+    password: '65440'
+  '92002':
+    username: '92002-54325'
+    password: '31714'
+  '92012':
+    username: '92012-46870'
+    password: '68572'
+  '90523':
+    username: '90523-82645'
+    password: '89715'
+  '90533':
+    username: '90533-57413'
+    password: '43201'
+  '65825':
+    username: '65825-IPT-49546-67667'
+    password: 'Uw5HXBipJ4kBHGZn1bAq'
+    ha1:      'b509095666231146d2650fe1cc1265ec'
+  '90011':
+    username: '90011-86452'
+    password: '98725'
+    ha1:      '20d4c09ad92c24937c3694b5f58fa58d'
+  '90012':
+    username: '90012-48730'
+    password: '67324'
+    ha1:      'c6dc20722ba570b09ebc44705cc969ec'
+  '90013':
+    username: '90013-76076'
+    password: '53731'
+    ha1:      '78eecf2dc7e945844c66b8d1e27f7937'

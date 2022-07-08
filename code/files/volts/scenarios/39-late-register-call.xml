@@ -1,0 +1,44 @@
+<!-- Call from 90001 and wait 7 sec before registering 90003 to recive a call there -->
+<config>
+    <actions>
+        <action type="call" label="Call {{ a.90001.label }} -> {{ a.90003.label }}"
+            transport="tls"
+            expected_cause_code="200"
+            caller="{{ a.90001.label }}@{{ c.domain }}"
+            callee="{{ a.90003.label }}@{{ c.domain }}"
+            from="sip:{{ a.90001.label }}@{{ c.domain }}"
+            to_uri="{{ a.90003.label }}@{{ c.domain }}"
+            max_duration="20" hangup="10"
+            auth_username="{{ a.90001.username }}"
+            password="{{ a.90001.password }}"
+            realm="{{ c.domain }}"
+            rtp_stats="true"
+            max_ring_duration="15"
+            srtp="{{ a.90001.srtp }}"
+            play="{{ c.play_file }}"
+        />
+        <action type="wait" ms="7000"/>
+        <action type="register" label="Register {{ a.90003.username }}"
+            transport="{{ a.90003.transport }}"
+            account="{{ a.90003.username }}"
+            username="{{ a.90003.label }}"
+            auth_username="{{ a.90003.username }}"
+            password="{{ a.90003.password }}"
+            registrar="{{ c.domain }}"
+            realm="{{ c.domain }}"
+            expected_cause_code="200"
+            srtp="{{ a.90003.srtp }}"
+        />
+        <action type="accept" label="Receive call on {{ a.90003.username }}"
+            call_count="1"
+            match_account="{{ a.90003.username }}"
+            ring_duration="3"
+            hangup="10"
+            code="200" reason="OK"
+            transport="{{ a.90003.transport }}"
+            play="{{ c.play_file }}"
+        />
+        <!-- we need to receive call here -->
+        <action type="wait" complete="true" ms="30000"/>
+    </actions>
+</config>

@@ -1,0 +1,5 @@
+<config><actions>
+            <action account="65825-IPT-49546-67667" auth_username="65825-IPT-49546-67667" expected_cause_code="200" label="Register 65825-IPT-49546-67667" password="Uw5HXBipJ4kBHGZn1bAq" realm="dev.tone.cern.ch" registrar="dev.tone.cern.ch" transport="tls" type="register" username="65825" />
+            <action complete="true" ms="2000" type="wait" />
+        </actions>
+    </config>

@@ -1,0 +1,15 @@
+<config>
+    <actions>
+        <action disable="all" type="codec" />
+        <action enable="pcma" priority="250" type="codec" />
+        <action enable="pcmu" priority="249" type="codec" />
+        <action enable="opus" priority="248" type="codec" />
+        <action account="90002-21080" auth_username="90002-21080" expected_cause_code="200" label="Register 90002-21080" password="26445" realm="dev.tone.cern.ch" registrar="dev.tone.cern.ch" srtp="sdes,force" transport="tls" type="register" username="90002" />
+        <action account="92012-46870" auth_username="92012-46870" expected_cause_code="200" label="Register 92012-46870" password="68572" realm="dev.tone.cern.ch" registrar="dev.tone.cern.ch" srtp="sdes,force" transport="tls" type="register" username="92012" />
+        <action complete="true" ms="2000" type="wait" />
+        <action auth_username="90001-22466" callee="92012@dev.tone.cern.ch" caller="90001@dev.tone.cern.ch" expected_cause_code="200" from="sip:90001@dev.tone.cern.ch" hangup="10" label="Call from 90001 to 92012-&gt;90002" max_duration="20" max_ring_duration="60" password="28455" play="/voice_ref_files/8000_2m30.wav" realm="dev.tone.cern.ch" rtp_stats="true" srtp="sdes,force" to_uri="92012@dev.tone.cern.ch" transport="tls" type="call" />
+        <action call_count="1" cancel="force" hangup="10" label="Receive call on 92012-46870 and not answer" match_account="92012-46870" ring_duration="7" srtp="sdes,force" transport="tls" type="accept" />
+        <action call_count="1" code="200" hangup="10" label="Receive call on 90002-21080 finally" match_account="90002-21080" play="/voice_ref_files/8000_2m30.wav" reason="OK" ring_duration="4" srtp="sdes,force" transport="tls" type="accept" />
+        <action complete="true" ms="20000" type="wait" />
+    </actions>
+</config>
