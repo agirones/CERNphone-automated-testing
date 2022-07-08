@@ -37,7 +37,7 @@ class volts {
 
   file { '/root':
     ensure  => directory,
-    source  => 'puppet:///modules/volts',
+    source  => 'puppet:///modules/volts/volts',
     recurse => 'remote',
     owner   => 'root',
     group   => 'root',
@@ -45,7 +45,7 @@ class volts {
 
   file { '/root/run.sh':
     ensure  => present,
-    content => file('volts/run.sh'),
+    content => file('volts/volts/run.sh'),
     mode    => '0750',
     owner   => 'root',
     group   => 'root',
