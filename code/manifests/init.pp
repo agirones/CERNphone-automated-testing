@@ -1,3 +1,3 @@
-class hg_tone::mgmt::volts {
+class volts {
   notify { 'Hello World!': }
 }
