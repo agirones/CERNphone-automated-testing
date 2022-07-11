@@ -5,7 +5,7 @@ class volts {
     version                   => '19.03.9-3.el7.x86_64',
     docker_ce_key_source      => "${_mirror}/linux/centos/gpg",
     docker_ce_source_location => "${_mirror}/linux/centos/7/x86_64/stable",
-    dns                       => [ '137.138.17.5', '188.185.126.213', '199.232.138.132' ]
+    dns                       => [ '137.138.17.5', '137.138.12.209', '188.185.126.213', '199.232.138.132' ]
   }
 
   package { 'docker-ce-cli' :
