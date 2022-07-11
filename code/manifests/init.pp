@@ -19,13 +19,13 @@ class volts {
   teigi::secret { 'harbor_password':
     key    => 'agirones-harbor',
     path   => '/etc/harbor_password',
+    before => Exec['docker login'], 
   }
 
   exec { 'docker login':
     provider => shell,
     path     => ['/usr/bin', '/usr/sbin'],
     command  => 'docker login -u agirones -p $(cat /etc/harbor_password) registry.cern.ch',
-    require  => Service['harbor_password'],
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
