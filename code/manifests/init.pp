@@ -16,21 +16,14 @@ class volts {
     priority => 10,
   }
 
-#  docker::image { 'volts_prepare':
-#    docker_dir  => '/root/build/prepare',
-#    subscribe   => File['/root'],
-#  }
-
   teigi::secret { 'harbor_password':
-    key  => 'agirones-harbor',
-    path => '/etc/harbor_password',
+    key    => 'agirones-harbor',
+    path   => '/etc/harbor_password',
+    before => Exec['docker login'],
   }
 
-  $harbor_password = Deferred('teigi::get',['agirones-harbor'])
-
-  docker::registry { 'registry.cern.ch':
-    username => 'agirones',
-    password => "${harbor_password}",
+  exec { 'docker login':
+    command => 'docker login -u agirones -p $(cat /etc/harbor_password) registry.cern.ch',
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
