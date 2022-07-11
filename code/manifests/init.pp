@@ -1,7 +1,4 @@
-class volts 
-(
-  String $harbor_password,
-) {
+class volts {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
   class{'::docker':
@@ -24,16 +21,14 @@ class volts
 #    subscribe   => File['/root'],
 #  }
 
-  teigi::secret { 'harbor_password':
-    key  => 'agirones-harbor',
-    path => '/etc/harbor_password',
-  }
-
-  $harbor_password = file("/etc/harbor_password")
+#  teigi::secret { 'harbor_password':
+#    key  => 'agirones-harbor',
+#    path => '/etc/harbor_password',
+#  }
 
   docker::registry { 'harbor volts':
     username => 'agirones',
-    password => "$harbor_password",
+    password => Deferred('teigi::get',['agirones-harbor']),
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
