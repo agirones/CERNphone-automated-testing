@@ -32,19 +32,16 @@ class volts {
     ensure    => 'present',
   }
 
-  docker::image { 'volts_database':
-    docker_dir  => '/root/build/database',
-    subscribe   => File['/root'],
+  docker::image { 'registry.cern.ch/volts/database':
+    ensure    => 'present',
   }
 
-  docker::image { 'volts_vp':
-    docker_dir  => '/root/build/vp',
-    subscribe   => File['/root'],
+  docker::image { 'registry.cern.ch/volts/vp':
+    ensure    => 'present',
   }
 
-  docker::image { 'volts_report':
-    docker_dir  => '/root/build/report',
-    subscribe   => File['/root'],
+  docker::image { 'registry.cern.ch/volts/report':
+    ensure    => 'present',
   }
 
   file { '/root':
