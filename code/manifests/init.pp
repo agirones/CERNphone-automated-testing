@@ -30,7 +30,7 @@ class volts {
 
   docker::registry { 'registry.cern.ch':
     username => 'agirones',
-    password => $harbor_password,
+    password => "${harbor_password}",
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
