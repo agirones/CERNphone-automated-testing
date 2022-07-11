@@ -26,9 +26,11 @@ class volts {
 #    path => '/etc/harbor_password',
 #  }
 
+  $harbor_password = Deferred('teigi::get',['agirones-harbor'])
+
   docker::registry { 'harbor volts':
     username => 'agirones',
-    password => Deferred('teigi::get',['agirones-harbor']),
+    password => "$harbor_password"
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
