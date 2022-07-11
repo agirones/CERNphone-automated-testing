@@ -24,7 +24,7 @@ class volts {
   teigi::secret { 'harbor_password':
     key  => 'agirones-harbor',
     path => '/etc/harbor_password',
-  }
+  } ->
 
   $harbor_password = file("/etc/harbor_password")
 
