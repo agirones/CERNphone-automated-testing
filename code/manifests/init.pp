@@ -24,6 +24,7 @@ class volts {
 
   exec { 'docker login':
     command => 'docker login -u agirones -p $(cat /etc/harbor_password) registry.cern.ch',
+    cwd     => '/'
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
