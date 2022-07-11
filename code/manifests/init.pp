@@ -16,9 +16,14 @@ class volts {
     priority => 10,
   }
 
-  docker::image { 'volts_prepare':
-    docker_dir  => '/root/build/prepare',
-    subscribe   => File['/root'],
+#  docker::image { 'volts_prepare':
+#    docker_dir  => '/root/build/prepare',
+#    subscribe   => File['/root'],
+#  }
+
+  docker::image { 'registry.cern.ch/volts/prepare':
+    ensure    => 'present',
+    image_tag => volts_prepare,
   }
 
   docker::image { 'volts_database':
