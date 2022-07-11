@@ -26,7 +26,7 @@ class volts {
     path => '/etc/harbor-password',
   }
 
-  $harbor-password => file("/etc/harbor-password")
+  $harbor-password = file("/etc/harbor-password")
 
   docker::registry { 'harbor volts':
     username => 'agirones',
