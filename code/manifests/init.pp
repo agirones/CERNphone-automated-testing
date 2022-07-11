@@ -1,11 +1,5 @@
 class volts {
 
-  class { '::timezone':
-    timezone => 'Europe/Berlin',
-    package_ensure => 'present',
-    manage_package => true,
-  }
-
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
   class{'::docker':
     version                   => '19.03.9-3.el7.x86_64',
