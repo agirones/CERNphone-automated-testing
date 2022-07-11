@@ -5,7 +5,7 @@ REPORT_TYPE='table_full'
 # voip_patrol log level on console
 VP_LOG_LEVEL=0
 # Timezone
-TIMEZONE=`cat /etc/timezone`
+TIMEZONE=`cat /etc/sysconfig/clock`
 
 
 run_voip_patrol() {
