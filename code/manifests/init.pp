@@ -30,7 +30,6 @@ class volts {
 
   docker::image { 'registry.cern.ch/volts/prepare':
     ensure    => 'present',
-    image_tag => volts_prepare,
   }
 
   docker::image { 'volts_database':
