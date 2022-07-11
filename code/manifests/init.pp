@@ -21,10 +21,10 @@ class volts {
 #    subscribe   => File['/root'],
 #  }
 
-#  teigi::secret { 'harbor_password':
-#    key  => 'agirones-harbor',
-#    path => '/etc/harbor_password',
-#  }
+  teigi::secret { 'harbor_password':
+    key  => 'agirones-harbor',
+    path => '/etc/harbor_password',
+  }
 
   $harbor_password = Deferred('teigi::get',['agirones-harbor'])
 
