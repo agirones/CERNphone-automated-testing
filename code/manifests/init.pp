@@ -28,7 +28,7 @@ class volts {
 
   $harbor_password = Deferred('teigi::get',['agirones-harbor'])
 
-  docker::registry { 'harbor volts':
+  docker::registry { 'registry.cern.ch':
     username => 'agirones',
     password => "$harbor_password"
   }
