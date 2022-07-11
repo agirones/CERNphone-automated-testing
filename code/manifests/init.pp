@@ -1,4 +1,7 @@
-class volts {
+class volts 
+(
+  String $harbor_password,
+) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
   class{'::docker':
@@ -24,7 +27,7 @@ class volts {
   teigi::secret { 'harbor_password':
     key  => 'agirones-harbor',
     path => '/etc/harbor_password',
-  } ->
+  }
 
   $harbor_password = file("/etc/harbor_password")
 
