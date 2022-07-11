@@ -5,7 +5,6 @@ REPORT_TYPE='table_full'
 # voip_patrol log level on console
 VP_LOG_LEVEL=0
 # Timezone
-TIMEZONE=`cat /etc/sysconfig/clock`
 
 
 run_voip_patrol() {
@@ -22,7 +21,6 @@ run_voip_patrol() {
     --env RESULT_FILE=`echo ${VP_RESULT_FILE}` \
     --env LOG_LEVEL=`echo ${VP_LOG_LEVEL}` \
     --env LOG_LEVEL_FILE=`echo ${VP_LOG_LEVEL_FILE}` \
-    --env TZ=`echo ${TIMEZONE}` \
     --volume ${DIR_PREFIX}/tmp/input/${CURRENT_SCENARIO}/voip_patrol.xml:/xml/${CURRENT_SCENARIO}.xml \
     --volume ${DIR_PREFIX}/tmp/output:/output \
     --volume ${DIR_PREFIX}/voice_ref_files:/voice_ref_files \
@@ -36,7 +34,6 @@ run_prepare() {
 
     docker run --name=${P_CONTAINER_NAME} \
         --env SCENARIO_NAME=`echo ${SCENARIO}` \
-        --env TZ=`echo ${TIMEZONE}` \
         --volume ${DIR_PREFIX}/scenarios:/opt/input/ \
         --volume ${DIR_PREFIX}/tmp/input:/opt/output \
         ${P_IMAGE}
@@ -50,7 +47,6 @@ run_report() {
     docker run --name=${R_CONTAINER_NAME} \
         --env REPORT_FILE=`echo ${VP_RESULT_FILE}` \
         --env REPORT_TYPE=`echo ${REPORT_TYPE}` \
-        --env TZ=`echo ${TIMEZONE}` \
         --volume ${DIR_PREFIX}/tmp/input:/opt/scenarios/ \
         --volume ${DIR_PREFIX}/tmp/output:/opt/report \
         ${R_IMAGE}
@@ -68,7 +64,6 @@ run_database() {
     docker run --name=${D_CONTAINER_NAME} \
         --env SCENARIO=`echo ${CURRENT_SCENARIO}` \
         --env STAGE=`echo $1` \
-        --env TZ=`echo ${TIMEZONE}` \
         --volume ${DIR_PREFIX}/tmp/input/${CURRENT_SCENARIO}/database.xml:/xml/${CURRENT_SCENARIO}.xml \
         ${D_IMAGE}
 
