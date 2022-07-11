@@ -21,6 +21,18 @@ class volts {
 #    subscribe   => File['/root'],
 #  }
 
+  teigi::secret { 'harbor-password':
+    key  => 'agirones-harbor',
+    path => '/etc/harbor-password',
+  }
+
+  $harbor-password => file("/etc/harbor-password")
+
+  docker::registry { 'harbor volts':
+    username => 'agirones',
+    password => "$harbor-password",
+  }
+
   docker::image { 'registry.cern.ch/volts/prepare':
     ensure    => 'present',
     image_tag => volts_prepare,
