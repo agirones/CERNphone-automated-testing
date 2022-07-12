@@ -24,7 +24,7 @@ class volts {
 
   teigi::secret::sub_file { '/root/.docker/config.json':
     content    => template('volts/config.json.erb'),
-    teigi_keys => ['harbor_password'],
+    teigi_keys => ['agirones-harbor'],
   }
 
 #  exec { 'docker login':
