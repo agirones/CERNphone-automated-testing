@@ -22,11 +22,16 @@ class volts {
     before => Exec['docker login'], 
   }
 
-  exec { 'docker login':
-    provider => shell,
-    path     => ['/usr/bin', '/usr/sbin'],
-    command  => 'docker login -u agirones -p $(cat /etc/harbor_password) registry.cern.ch',
+  teigi::secret::sub_file { '/root/.docker/config.json':
+    content    => template('config.json.erb'),
+    teigi_keys => ['harbor_password'],
   }
+
+#  exec { 'docker login':
+#    provider => shell,
+#    path     => ['/usr/bin', '/usr/sbin'],
+#    command  => 'docker login -u agirones -p $(cat /etc/harbor_password) registry.cern.ch',
+#  }
 
   docker::image { 'registry.cern.ch/volts/prepare':
     ensure    => 'present',
