@@ -121,7 +121,7 @@ else
 fi
 
 # report
-R_IMAGE=volts_report:latest
+R_IMAGE=registry.cern.ch/volts/report:latest
 R_CONTAINER_NAME=volts_report
 
 run_report
