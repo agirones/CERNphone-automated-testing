@@ -23,7 +23,7 @@ class volts {
   }
 
   teigi::secret::sub_file { '/root/.docker/config.json':
-    content    => template('config.json.erb'),
+    content    => template('volts/config.json.erb'),
     teigi_keys => ['harbor_password'],
   }
 
