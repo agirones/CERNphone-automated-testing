@@ -19,7 +19,7 @@ class volts {
   teigi::secret { 'harbor_password':
     key    => 'agirones-harbor',
     path   => '/etc/harbor_password',
-    before => Exec['docker login'], 
+    before => File['/root/.docker/config.json'], 
   }
 
   teigi::secret::sub_file { '/root/.docker/config.json':
