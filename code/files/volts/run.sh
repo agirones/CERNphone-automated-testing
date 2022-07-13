@@ -64,7 +64,6 @@ run_database() {
     docker run --name=${D_CONTAINER_NAME} \
         --env SCENARIO=`echo ${CURRENT_SCENARIO}` \
         --env STAGE=`echo $1` \
-        --dns 188.185.126.213 \
         --volume ${DIR_PREFIX}/tmp/input/${CURRENT_SCENARIO}/database.xml:/xml/${CURRENT_SCENARIO}.xml \
         ${D_IMAGE}
 
