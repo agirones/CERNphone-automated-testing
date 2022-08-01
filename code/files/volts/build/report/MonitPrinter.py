@@ -58,5 +58,5 @@ class MonitPrinter(Printer):
 
     def get_credentials_from_enviroment_variables(self):
         self.username = os.environ.get('CERN_USER')
-        self.username = os.environ.get('CERN_PASSWORD')
+        self.username = os.environ.get('CERN_PASSWORD').encode("utf-8")
 
