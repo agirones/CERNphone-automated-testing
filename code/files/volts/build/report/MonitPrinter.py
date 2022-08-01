@@ -10,7 +10,7 @@ class MonitPrinter(Printer):
 
     def __init__(self, report):
         super(MonitPrinter, self).__init__(report)
-        self.target_address = 'https://monit-metrics:10014/pabx'
+        self.target_address = 'https://monit-metrics:10012'
 
     def print_report(self):
         number_failed_scenarios = 0
@@ -24,22 +24,8 @@ class MonitPrinter(Printer):
         return status_message
 
     def get_status_message(self, number_failed_scenarios):
-        template = {
-          "producer": "volts",
-          "type": "availability",
-          "serviceid": "arealserviceid",
-          "service_status": "unknown",
-          "contact": "ihor.olkhovskyi@cern.ch"
-        }
-
-        if number_failed_scenarios < 3:
-            template['service_status'] = 'available'
-        elif number_failed_scenarios == 3:
-            template['service_status'] = 'degraded'
-        elif number_failed_scenarios > 3:
-            template['service_status'] = 'unavailable'
-                
-        return [template]
+        message = Debug(number_failed_scenarios)
+        return [message]
 
     def send(self, document):
         self.get_credentials_from_enviroment_variables()
@@ -58,5 +44,65 @@ class MonitPrinter(Printer):
 
     def get_credentials_from_enviroment_variables(self):
         self.username = os.environ.get('CERN_USER')
-        self.username = os.environ.get('CERN_PASSWORD').encode("utf-8")
+        self.password = os.environ.get('CERN_PASSWORD').encode("utf-8")
+
+
+class Message:
+
+
+class AvalilabilityMessage(Message):
+
+    def __init__(self, status):
+        self.status = status
+        self.template = {"producer": "volts", "type": "availability", "serviceid": "arealserviceid", "service_status": "unknown", "contact": "ihor.olkhovskyi@cern.ch"}
+
+    def get_message(self):
+        self.template[service_status] = f"{self.status}"
+        return [self.template]
+
+
+class DebugMessage(Message):
+
+    def __init__(self, failed_tests):
+        self.failed_tests = failed_tests
+        self.template = { "producer": "debugger", "type": "failed_tests", "failed_tests": "unknown" }
+
+    def get_message(self):
+        self.template[failed_tests] = f"{self.failed_tests}"
+        return [self.template]
+
+
+class ServiceStatusFactory:
+    
+    def __init__(self, number_failed_scenarios):
+        self.failed_scenarios = number_failed_scenarios
+
+
+class TestThreshold(ServiceStatusFactory):
+
+    def __init__(self, threshold, number_failed_scenarios):
+        super(TestThreshold, self).__init__(number_failed_scenarios)
+        self.threshold = threshold
+
+    def get_status_message(self):
+        if self.failed_scenarios > self.threshold: 
+            message = AvailabilityMessage('unavailable')
+
+        elif self.failed_scenarios == self.threshold: 
+            message = AvailabilityMessage('degraded')
+
+        else:
+            message = AvailabilityMessage('available')
+
+        return message.get_message()
+        
+class Debug(ServiceStatusFactory):
+
+    def __init__(self, number_failed_scenarios):
+        super(Debug, self).__init__(number_failed_scenarios)
+
+    def get_status_message(self):
+        message = DebugMessage(self.failed_scenarios)
+        return message.get_status_message()
+    
 
