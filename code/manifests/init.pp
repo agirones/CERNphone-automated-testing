@@ -71,26 +71,26 @@ class volts {
     group   => 'root',
   }
   
-  cron { 'run tests':
-    ensure      => present,
-    command     => '/root/run.sh',
-    user        => 'root',
-    minute      => */30,
-    hour        => absent,
-    monthday    => absent,
-    month       => absent,
-    weekday     => absent,
-  }
-
-  cron { 'send service status to monit'
-    ensure      => present,
-    command     => 'python3 report_service_status.py',
-    user        => 'root',
-    minute      => */30,
-    hour        => absent,
-    monthday    => absent,
-    month       => absent,
-    weekday     => absent,
-  }
+#  cron { 'run tests':
+#    ensure      => present,
+#    command     => '/root/run.sh',
+#    user        => 'root',
+#    minute      => */30,
+#    hour        => absent,
+#    monthday    => absent,
+#    month       => absent,
+#    weekday     => absent,
+#  }
+#
+#  cron { 'send service status to monit'
+#    ensure      => present,
+#    command     => 'python3 report_service_status.py',
+#    user        => 'root',
+#    minute      => */30,
+#    hour        => absent,
+#    monthday    => absent,
+#    month       => absent,
+#    weekday     => absent,
+#  }
 
 }
