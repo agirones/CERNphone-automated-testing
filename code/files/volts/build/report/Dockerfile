@@ -1,13 +1,12 @@
 FROM python:3.7-buster
 LABEL maintainer="Ihor Olkhovskyi <ihor.olkhovskyi@cern.ch>"
 
-COPY requirements.txt /root/requirements.txt
+ADD src/report/ /root/
 
 RUN mkdir -p /opt/scenarios && \
     mkdir -p /opt/report && \
     pip install -r /root/requirements.txt
 
-COPY report.py /root/report.py
 COPY entrypoint.report.sh /docker-entrypoint.sh
 
 RUN chmod +x /docker-entrypoint.sh
