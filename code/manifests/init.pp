@@ -28,8 +28,11 @@ class volts {
 
   teigi::secret::sub_file { '/root/run.sh':
     content    => template('volts/run.sh'),
+    mode    => '0750',
+    owner   => 'root',
+    group   => 'root',
     teigi_keys => ['andreu-user-cern', 'andreu-password-cern'],
-    before => Exec['run'], 
+    before => Exec['run'],
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
