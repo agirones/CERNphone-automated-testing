@@ -63,14 +63,6 @@ class volts {
 #    group   => 'root',
 #  }
 
-  file { 'report_service_status.py':
-    ensure  => present,
-    content => file('volts/volts/report_service_status.py'),
-    mode    => '0750',
-    owner   => 'root',
-    group   => 'root',
-  }
-  
 #  cron { 'run tests':
 #    ensure      => present,
 #    command     => '/root/run.sh',
