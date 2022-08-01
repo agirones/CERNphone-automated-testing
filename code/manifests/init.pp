@@ -32,7 +32,6 @@ class volts {
     owner   => 'root',
     group   => 'root',
     teigi_keys => ['andreu-user-cern', 'andreu-password-cern'],
-    before => Exec['run'],
   }
 
   docker::image { 'registry.cern.ch/volts/prepare':
