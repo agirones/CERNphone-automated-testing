@@ -5,7 +5,6 @@ class volts {
     version                   => '19.03.9-3.el7.x86_64',
     docker_ce_key_source      => "${_mirror}/linux/centos/gpg",
     docker_ce_source_location => "${_mirror}/linux/centos/7/x86_64/stable",
-#    dns                       => [ '137.138.17.5', '137.138.12.209', '188.185.126.213', '199.232.138.132' ],
   }
 
   package { 'docker-ce-cli' :
@@ -27,11 +26,10 @@ class volts {
     teigi_keys => ['agirones-harbor'],
   }
 
-#  exec { 'docker login':
-#    provider => shell,
-#    path     => ['/usr/bin', '/usr/sbin'],
-#    command  => 'docker login -u agirones -p $(cat /etc/harbor_password) registry.cern.ch',
-#  }
+  teigi::secret::sub_file { '/root/run.sh':
+    content    => template('volts/run.sh'),
+    teigi_keys => ['andreu-user-cern', 'andreu-password-cern'],
+  }
 
   docker::image { 'registry.cern.ch/volts/prepare':
     ensure    => 'present',
@@ -57,11 +55,42 @@ class volts {
     group   => 'root',
   }
 
-  file { '/root/run.sh':
+#  file { '/root/run.sh':
+#    ensure  => present,
+#    content => file('volts/volts/run.sh'),
+#    mode    => '0750',
+#    owner   => 'root',
+#    group   => 'root',
+#  }
+
+  file { 'report_service_status.py':
     ensure  => present,
-    content => file('volts/volts/run.sh'),
+    content => file('volts/volts/report_service_status.py'),
     mode    => '0750',
     owner   => 'root',
     group   => 'root',
   }
+  
+  cron { 'run tests':
+    ensure      => present,
+    command     => '/root/run.sh',
+    user        => 'root',
+    minute      => */30,
+    hour        => absent,
+    monthday    => absent,
+    month       => absent,
+    weekday     => absent,
+  }
+
+  cron { 'send service status to monit'
+    ensure      => present,
+    command     => 'python3 report_service_status.py',
+    user        => 'root',
+    minute      => */30,
+    hour        => absent,
+    monthday    => absent,
+    month       => absent,
+    weekday     => absent,
+  }
+
 }
