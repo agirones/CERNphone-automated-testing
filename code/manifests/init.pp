@@ -78,8 +78,4 @@ class volts {
 #    weekday     => absent,
 #  }
 
-  exec { 'run':
-      command => '/root/run.sh',
-      provider => shell,
-  }
 }
