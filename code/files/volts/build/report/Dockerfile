@@ -1,7 +1,7 @@
 FROM python:3.7-buster
 LABEL maintainer="Ihor Olkhovskyi <ihor.olkhovskyi@cern.ch>"
 
-ADD src/report/ /root/
+ADD ./ /root/
 
 RUN mkdir -p /opt/scenarios && \
     mkdir -p /opt/report && \

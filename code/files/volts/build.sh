@@ -1,10 +1,13 @@
 #!/bin/sh
 
 if [ "$1" = "-r" ]; then
-    docker image rm volts_vp:latest
+    docker rmi $(docker images | grep prepare | awk '{ print $3 }')
+    docker rmi $(docker images | grep vp | awk '{ print $3 }')
+    docker rmi $(docker images | grep report | awk '{ print $3 }')
+    docker rmi $(docker images | grep database | awk '{ print $3 }')
 fi
 
-docker build --file build/Dockerfile.prepare --tag volts_prepare build/
-docker build --file build/Dockerfile.vp --tag volts_vp build/
-docker build --file build/Dockerfile.report --tag volts_report build/
-docker build --file build/Dockerfile.database --tag volts_database build/
+docker build --file build/prepare/Dockerfile --tag registry.cern.ch/volts/prepare build/prepare
+docker build --file build/vp/Dockerfile --tag registry.cern.ch/volts/vp build/vp
+docker build --file build/report/Dockerfile --tag registry.cern.ch/volts/report build/report
+docker build --file build/database/Dockerfile --tag registry.cern.ch/volts/database build/database
