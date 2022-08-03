@@ -53,7 +53,7 @@ class volts {
   file { '/root':
     ensure  => directory,
     source  => 'puppet:///modules/volts',
-    recurse => 'remote',
+    recurse => 'true',
     owner   => 'root',
     group   => 'root',
   }
