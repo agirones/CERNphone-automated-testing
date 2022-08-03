@@ -54,6 +54,7 @@ class volts {
     ensure  => directory,
     source  => 'puppet:///modules/volts',
     recurse => 'true',
+    purge   => 'true',
     owner   => 'root',
     group   => 'root',
   }
