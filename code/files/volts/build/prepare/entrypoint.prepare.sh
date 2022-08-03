@@ -6,3 +6,4 @@ rm -rf /opt/output/*
 python3 /root/prepare.py
 # Make sure data is accessible
 chmod -R 777 /opt/
+tail -f /dev/null
