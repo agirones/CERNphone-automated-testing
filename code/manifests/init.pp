@@ -22,12 +22,12 @@ class volts {
   }
 
   teigi::secret::sub_file { '/root/.docker/config.json':
-    content    => template('config.json.erb'),
+    content    => template('volts/config.json.erb'),
     teigi_keys => ['gitlab-registry-token'],
   }
 
   teigi::secret::sub_file { '/root/run.sh':
-    content    => template('run.sh'),
+    content    => template('volts/run.sh'),
     mode    => '0750',
     owner   => 'root',
     group   => 'root',
