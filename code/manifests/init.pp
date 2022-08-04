@@ -15,15 +15,15 @@ class volts {
     priority => 10,
   }
 
-  teigi::secret { 'harbor_password':
-    key    => 'agirones-harbor',
-    path   => '/etc/harbor_password',
+  teigi::secret { 'volts-gitlab-registry-token':
+    key    => 'gitlab-registry-token',
+    path   => '/etc/gitlab-registry-token',
     before => File['/root/.docker/config.json'], 
   }
 
   teigi::secret::sub_file { '/root/.docker/config.json':
     content    => template('volts/config.json.erb'),
-    teigi_keys => ['agirones-harbor'],
+    teigi_keys => ['gitlab-registry-token'],
   }
 
   teigi::secret::sub_file { '/root/run.sh':
@@ -34,19 +34,19 @@ class volts {
     teigi_keys => ['andreu-user-cern', 'andreu-password-cern'],
   }
 
-  docker::image { 'registry.cern.ch/volts/prepare':
+  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/prepare':
     ensure    => 'present',
   }
 
-  docker::image { 'registry.cern.ch/volts/database':
+  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/database':
     ensure    => 'present',
   }
 
-  docker::image { 'registry.cern.ch/volts/vp':
+  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/vp':
     ensure    => 'present',
   }
 
-  docker::image { 'registry.cern.ch/volts/report':
+  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/report':
     ensure    => 'present',
   }
 
