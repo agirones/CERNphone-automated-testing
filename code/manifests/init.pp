@@ -15,7 +15,7 @@ class volts {
     priority => 10,
   }
 
-  teigi::secret { 'volts-gitlab-registry-token':
+  teigi::secret { 'gitlab-registry-token':
     key    => 'gitlab-registry-token',
     path   => '/etc/gitlab-registry-token',
     notify => File['/root/.docker/config.json'], 
@@ -24,7 +24,7 @@ class volts {
   teigi::secret::sub_file { '/root/.docker/config.json':
     content    => template('volts/config.json.erb'),
     teigi_keys => ['gitlab-registry-token'],
-    subscribe  => ['volts-gitlab-registry-token', '/root'],
+    subscribe  => ['gitlab-registry-token', '/root'],
   }
 
   docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/prepare':
