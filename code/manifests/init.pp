@@ -55,6 +55,7 @@ class volts {
     source  => 'puppet:///modules/volts',
     recurse => 'true',
     purge   => 'true',
+    force   => 'true',
     owner   => 'root',
     group   => 'root',
   }
