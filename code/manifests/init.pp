@@ -26,14 +26,6 @@ class volts {
     teigi_keys => ['gitlab-registry-token'],
   }
 
-  teigi::secret::sub_file { '/root/run.sh':
-    content    => template('volts/run.sh'),
-    mode    => '0750',
-    owner   => 'root',
-    group   => 'root',
-    teigi_keys => ['andreu-user-cern', 'andreu-password-cern'],
-  }
-
   docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/prepare':
     ensure    => 'present',
   }
@@ -58,15 +50,8 @@ class volts {
     force   => 'true',
     owner   => 'root',
     group   => 'root',
+    before => File['/root/.docker/config.json'], 
   }
-
-#  file { '/root/run.sh':
-#    ensure  => present,
-#    content => file('volts/volts/run.sh'),
-#    mode    => '0750',
-#    owner   => 'root',
-#    group   => 'root',
-#  }
 
 #  cron { 'run tests':
 #    ensure      => present,
