@@ -18,7 +18,7 @@ class volts {
   teigi::secret { 'gitlab-registry-token':
     key    => 'gitlab-registry-token',
     path   => '/etc/gitlab-registry-token',
-    notify => File['/root/.docker/config.json'], 
+    notify => Teigi::secret::sub_file['/root/.docker/config.json'], 
   }
 
   teigi::secret::sub_file { '/root/.docker/config.json':
