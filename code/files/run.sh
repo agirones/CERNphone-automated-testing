@@ -14,8 +14,7 @@ run_voip_patrol() {
         return
     fi
 
-    docker run --net=host \
-    --name=${VP_CONTAINER_NAME} \
+    docker run --name=${VP_CONTAINER_NAME} \
     --env XML_CONF=`echo ${CURRENT_SCENARIO}` \
     --env PORT=`echo ${VP_PORT}` \
     --env RESULT_FILE=`echo ${VP_RESULT_FILE}` \
@@ -24,9 +23,10 @@ run_voip_patrol() {
     --volume ${DIR_PREFIX}/tmp/input/${CURRENT_SCENARIO}/voip_patrol.xml:/xml/${CURRENT_SCENARIO}.xml \
     --volume ${DIR_PREFIX}/tmp/output:/output \
     --volume ${DIR_PREFIX}/voice_ref_files:/voice_ref_files \
+    --network none \
+    --rm \
     ${VP_IMAGE}
 
-    docker rm ${VP_CONTAINER_NAME}
 }
 
 run_prepare() {
@@ -36,9 +36,10 @@ run_prepare() {
         --env SCENARIO_NAME=`echo ${SCENARIO}` \
         --volume ${DIR_PREFIX}/scenarios:/opt/input/ \
         --volume ${DIR_PREFIX}/tmp/input:/opt/output \
+        --network none \
+        --rm \
         ${P_IMAGE}
 
-    docker rm ${P_CONTAINER_NAME}
 }
 
 run_report() {
@@ -49,9 +50,10 @@ run_report() {
         --env REPORT_TYPE=`echo ${REPORT_TYPE}` \
         --volume ${DIR_PREFIX}/tmp/input:/opt/scenarios/ \
         --volume ${DIR_PREFIX}/tmp/output:/opt/report \
+        --network host \
+        --rm \
         ${R_IMAGE}
 
-    docker rm ${R_CONTAINER_NAME} >> /dev/null 2>&1
 }
 
 run_database() {
@@ -61,14 +63,14 @@ run_database() {
         return
     fi
 
-    docker run --net=host \
-        --name=${D_CONTAINER_NAME} \
+    docker run --name=${D_CONTAINER_NAME} \
         --env SCENARIO=`echo ${CURRENT_SCENARIO}` \
         --env STAGE=`echo $1` \
         --volume ${DIR_PREFIX}/tmp/input/${CURRENT_SCENARIO}/database.xml:/xml/${CURRENT_SCENARIO}.xml \
+        --network host \
+        --rm \
         ${D_IMAGE}
 
-    docker rm ${R_CONTAINER_NAME} >> /dev/null 2>&1
 }
 
 # Script controlled variables
