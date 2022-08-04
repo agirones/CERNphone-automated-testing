@@ -83,7 +83,7 @@ if [ "x${SCENARIO}" != "x" ]; then
 fi
 
 # prepare
-P_IMAGE=registry.cern.ch/volts/prepare:latest
+P_IMAGE=gitlab-registry.cern.ch/cernphone/functional-testing/prepare:latest
 P_CONTAINER_NAME=volts_prepare
 
 rm -f tmp/input/scenarios.done
@@ -95,11 +95,11 @@ if [ ! -f ${DIR_PREFIX}/tmp/input/scenarios.done ]; then
 fi
 
 # database
-D_IMAGE=registry.cern.ch/volts/database:latest
+D_IMAGE=gitlab-registry.cern.ch/cernphone/functional-testing/database:latest
 D_CONTAINER_NAME=volts_database
 
 # voip_patrol
-VP_IMAGE=registry.cern.ch/volts/vp:latest
+VP_IMAGE=gitlab-registry.cern.ch/cernphone/functional-testing/vp:latest
 VP_CONTAINER_NAME=volts_vp
 VP_PORT=5060
 VP_RESULT_FILE="result.jsonl"
@@ -124,7 +124,7 @@ else
 fi
 
 # report
-R_IMAGE=registry.cern.ch/volts/report:latest
+R_IMAGE=gitlab-registry.cern.ch/cernphone/functional-testing/report:latest
 R_CONTAINER_NAME=volts_report
 
 run_report
