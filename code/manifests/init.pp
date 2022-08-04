@@ -54,7 +54,13 @@ class volts {
     force   => 'true',
     owner   => 'root',
     group   => 'root',
-    notify  => File['/root/.docker/config.json'], 
+    notify  => File['/root/.docker/config.json', '/root/.docker'], 
+  }
+
+  file { '/root/.docker':
+    ensure    => directory,
+    mode      =>  '0660',
+    subscribe => File['/root'],
   }
 
 #  cron { 'run tests':
