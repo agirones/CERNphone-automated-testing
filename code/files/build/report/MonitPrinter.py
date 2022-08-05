@@ -49,6 +49,9 @@ class MonitPrinter(Printer):
 
 class Message:
 
+    def __init__(self):
+        self.template = {}
+
 
 class AvalilabilityMessage(Message):
 
