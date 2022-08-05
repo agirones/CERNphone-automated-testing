@@ -30,19 +30,19 @@ class volts {
     ],
   }
 
-  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/prepare':
+  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/prepare':
     ensure    => 'present',
   }
 
-  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/database':
+  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/database':
     ensure    => 'present',
   }
 
-  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/vp':
+  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/vp':
     ensure    => 'present',
   }
 
-  docker::image { 'gitlab-registry.cern.ch/cernphone/functional-testing/report':
+  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/report':
     ensure    => 'present',
   }
 
@@ -54,12 +54,18 @@ class volts {
     force   => 'true',
     owner   => 'root',
     group   => 'root',
-    notify  => File['/root/.docker/config.json', '/root/.docker'], 
+    notify  => File['/root/run.sh', '/root/.docker/config.json', '/root/.docker'], 
   }
 
   file { '/root/.docker':
     ensure    => directory,
-    mode      =>  '0660',
+    mode      => '0660',
+    subscribe => File['/root'],
+  }
+
+  file { '/root/run.sh':
+    ensure    => file,
+    mode      => '0770',
     subscribe => File['/root'],
   }
 
