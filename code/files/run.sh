@@ -7,7 +7,7 @@ VP_LOG_LEVEL=0
 
 # Private variables
 declare -a CONTAINERS=('database' 'prepare' 'vp' 'report' )
-export REGISTRY='gitlab-registry.cern.ch/cernphone/functional-testing/'
+export REGISTRY='gitlab-registry.cern.ch/agirones/functional-testing/'
 
 # Images names
 for CONTAINER in ${CONTAINERS[@]}; do
