@@ -69,15 +69,15 @@ class volts {
     subscribe => File['/root'],
   }
 
-  cron { 'run tests':
-    ensure      => present,
-    command     => '/root/run.sh',
-    user        => 'root',
-    minute      => [0, 30],
-    hour        => absent,
-    monthday    => absent,
-    month       => absent,
-    weekday     => absent,
-  }
+#  cron { 'run tests':
+#    ensure      => present,
+#    command     => '/root/run.sh',
+#    user        => 'root',
+#    minute      => [0, 30],
+#    hour        => absent,
+#    monthday    => absent,
+#    month       => absent,
+#    weekday     => absent,
+#  }
 
 }
