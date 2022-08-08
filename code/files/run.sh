@@ -51,7 +51,7 @@ run_voip_patrol() {
     PATH_HOST_VP_CONFIGURATION=$CURRENT_DIRECTORY/tmp/input/${CURRENT_SCENARIO}/voip_patrol.xml
     PATH_VP_CONFIGURATION=/xml/${CURRENT_SCENARIO}.xml
 
-    if [ ! -f $PATH_VP_CONFIGURATION ]; then
+    if [ ! -f $PATH_HOST_VP_CONFIGURATION ]; then
         return
     fi
 
@@ -71,6 +71,8 @@ run_voip_patrol() {
 }
 
 run_prepare() {
+    rm -f tmp/input/scenarios.done
+
     docker rm ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
 
     docker run --name=${PREPARE_CONTAINER_NAME} \
@@ -81,6 +83,10 @@ run_prepare() {
         --rm \
         ${PREPARE_IMAGE_NAME}
 
+    if [ ! -f ${CURRENT_DIRECTORY}/tmp/input/scenarios.done ]; then
+        echo "Scenarios are not prepared, please check for the errors"
+        exit 1
+    fi
 }
 
 run_report() {
@@ -116,41 +122,64 @@ run_database() {
         ${DATABASE_IMAGE_NAME}
 
 }
+ 
+while getopts ":iptrh" opt; do
+  case $opt in
+    i)
+      pull_images
+      ;;
+    p)
+      run_prepare
+      ;;
+    t)
+      rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
 
-# Script controlled variables
-# First arument - single test to run
-SCENARIO="$1"
-if [ "x${SCENARIO}" != "x" ]; then
-    SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
-fi
-
-pull_images
-
-rm -f tmp/input/scenarios.done
-run_prepare
-
-if [ ! -f ${CURRENT_DIRECTORY}/tmp/input/scenarios.done ]; then
-    echo "Scenarios are not prepared, please check for the errors"
-    exit 1
-fi
-
-
-rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
-
-if [ -z ${SCENARIO} ]; then
-    for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
+      for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
         if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
             CURRENT_SCENARIO=`basename ${DIRECTORY}`
             run_database pre
             run_voip_patrol
             run_database post
         fi
-    done
-else
-    CURRENT_SCENARIO=${SCENARIO}
-    run_database pre
-    run_voip_patrol
-    run_database post
-fi
+      done
+      ;;
+    r)
+      run_report
+      ;;
+    h)
+        echo "Usage:  run.sh [OPTIONS] test_names"
+        echo ""
+        echo "Options:" >&2
+        echo "      -i	pull all images from repository" >&2
+        echo "      -p	runs prepare container" >&2
+        echo "      -t	run all tests with database pre, vp, and database post" >&2
+        echo "      -r	run report container" >&2
+        echo "      -h	shows this help" >&2
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
 
-run_report
+if [ $OPTIND -eq 1 ]; then
+    if [ "$#" -eq 0 ]; then 
+        pull_images
+        run_prepare
+        rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
+        CURRENT_SCENARIO=${SCENARIO}
+        run_database pre
+        run_voip_patrol
+        run_database post
+        run_report
+    else
+        for SCENARIO in "$@"; do
+            CURRENT_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
+            run_database pre
+            run_voip_patrol
+            run_database post
+            run_report
+        done
+    fi
+fi
