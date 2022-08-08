@@ -104,7 +104,7 @@ run_voip_patrol() {
     --volume $PATH_HOST_VP_CONFIGURATION:$PATH_VP_CONFIGURATION \
     --volume $PATH_HOST_OUTPUT:$PATH_VP_OUTPUT \
     --volume $PATH_HOST_VOICE_FILES:$PATH_VP_VOICE_FILES \
-    --network none \
+    --network host \
     --rm \
     ${VP_IMAGE_NAME}
 
