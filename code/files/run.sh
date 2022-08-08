@@ -165,9 +165,9 @@ while getopts ":iptrh" opt; do
 done
 
 if [ $OPTIND -eq 1 ]; then
-    if [ "$#" -eq 0 ]; then 
         pull_images
         run_prepare
+    if [ "$#" -eq 0 ]; then 
         rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
         for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
           if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
@@ -177,14 +177,13 @@ if [ $OPTIND -eq 1 ]; then
               run_database post
           fi
       done
-              run_report
     else
         for SCENARIO in "$@"; do
             CURRENT_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
             run_database pre
             run_voip_patrol
             run_database post
-            run_report
         done
     fi
+    run_report
 fi
