@@ -66,6 +66,7 @@ class volts {
   file { '/root/run.sh':
     ensure    => present,
     mode      => '0770',
+    source  => 'puppet:///modules/volts/run.sh',
     subscribe => File['/root'],
   }
 
