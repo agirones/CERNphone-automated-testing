@@ -40,6 +40,8 @@ VP_PORT=5060
 VP_RESULT_FILE="result.jsonl"
 VP_LOG_LEVEL_FILE=${VP_LOG_LEVEL}
 
+LOCK_DIRECTORY=/tmp/run.lock
+
 pull_images() {
     for CONTAINER in ${CONTAINERS[@]}; do
         REPOSITORY=${CONTAINER^^}_IMAGE_NAME
@@ -124,6 +126,11 @@ run_report() {
 
 }
 
+if ! mkdir "$LOCK_DIRECTORY"; then
+  echo >&2 "cannot acquire lock, giving up on $LOCK_DIRECTORY"
+  exit 1
+fi
+
 while getopts ":ipt:rh" opt; do
   case $opt in
     i)
@@ -201,3 +208,4 @@ if [ $OPTIND -eq 1 ]; then
     fi
     run_report
 fi
+rm -r /tmp/run.lock

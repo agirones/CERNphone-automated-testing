@@ -73,6 +73,7 @@ class volts {
 #  cron { 'run tests':
 #    ensure      => present,
 #    command     => '/root/run.sh',
+#    enviroment  => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
 #    user        => 'root',
 #    minute      => [0, 30],
 #    hour        => absent,
