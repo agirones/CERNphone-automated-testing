@@ -47,6 +47,46 @@ pull_images() {
     done
 }
 
+
+run_prepare() {
+    rm -f tmp/input/scenarios.done
+
+    docker rm ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
+
+    docker run --name=${PREPARE_CONTAINER_NAME} \
+        --env SCENARIO_NAME=`echo ${SCENARIO}` \
+        --volume $PATH_HOST_SCENARIOS:$PATH_PREPARE_INPUT \
+        --volume $PATH_HOST_INPUT:$PATH_PREPARE_OUTPUT \
+        --network none \
+        --rm \
+        ${PREPARE_IMAGE_NAME}
+
+    if [ ! -f ${CURRENT_DIRECTORY}/tmp/input/scenarios.done ]; then
+        echo "Scenarios are not prepared, please check for the errors"
+        exit 1
+    fi
+}
+
+run_database() {
+    PATH_HOST_DB_CONFIGURATION=${CURRENT_DIRECTORY}/tmp/input/${CURRENT_SCENARIO}/database.xml
+    PATH_DB_CONFIGURATION=/xml/${CURRENT_SCENARIO}.xml
+
+    docker rm ${DATABASE_CONTAINER_NAME} >> /dev/null 2>&1
+
+    if [ ! -f $PATH_HOST_DB_CONFIGURATION ]; then 
+        return
+    fi
+
+    docker run --name=${DATABASE_CONTAINER_NAME} \
+        --env SCENARIO=`echo ${CURRENT_SCENARIO}` \
+        --env STAGE=`echo $1` \
+        --volume $PATH_HOST_DB_CONFIGURATION:$PATH_DB_CONFIGURATION \
+        --network host \
+        --rm \
+        ${DATABASE_IMAGE_NAME}
+
+}
+ 
 run_voip_patrol() {
     PATH_HOST_VP_CONFIGURATION=$CURRENT_DIRECTORY/tmp/input/${CURRENT_SCENARIO}/voip_patrol.xml
     PATH_VP_CONFIGURATION=/xml/${CURRENT_SCENARIO}.xml
@@ -70,25 +110,6 @@ run_voip_patrol() {
 
 }
 
-run_prepare() {
-    rm -f tmp/input/scenarios.done
-
-    docker rm ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
-
-    docker run --name=${PREPARE_CONTAINER_NAME} \
-        --env SCENARIO_NAME=`echo ${SCENARIO}` \
-        --volume $PATH_HOST_SCENARIOS:$PATH_PREPARE_INPUT \
-        --volume $PATH_HOST_INPUT:$PATH_PREPARE_OUTPUT \
-        --network none \
-        --rm \
-        ${PREPARE_IMAGE_NAME}
-
-    if [ ! -f ${CURRENT_DIRECTORY}/tmp/input/scenarios.done ]; then
-        echo "Scenarios are not prepared, please check for the errors"
-        exit 1
-    fi
-}
-
 run_report() {
     docker rm ${REPORT_CONTAINER_NAME} >> /dev/null 2>&1
 
@@ -103,26 +124,6 @@ run_report() {
 
 }
 
-run_database() {
-    PATH_HOST_DB_CONFIGURATION=${CURRENT_DIRECTORY}/tmp/input/${CURRENT_SCENARIO}/database.xml
-    PATH_DB_CONFIGURATION=/xml/${CURRENT_SCENARIO}.xml
-
-    docker rm ${DATABASE_CONTAINER_NAME} >> /dev/null 2>&1
-
-    if [ ! -f $PATH_HOST_DB_CONFIGURATION ]; then 
-        return
-    fi
-
-    docker run --name=${DATABASE_CONTAINER_NAME} \
-        --env SCENARIO=`echo ${CURRENT_SCENARIO}` \
-        --env STAGE=`echo $1` \
-        --volume $PATH_HOST_DB_CONFIGURATION:$PATH_DB_CONFIGURATION \
-        --network host \
-        --rm \
-        ${DATABASE_IMAGE_NAME}
-
-}
- 
 while getopts ":iptrh" opt; do
   case $opt in
     i)
@@ -168,11 +169,15 @@ if [ $OPTIND -eq 1 ]; then
         pull_images
         run_prepare
         rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
-        CURRENT_SCENARIO=${SCENARIO}
-        run_database pre
-        run_voip_patrol
-        run_database post
-        run_report
+        for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
+          if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
+              CURRENT_SCENARIO=`basename ${DIRECTORY}`
+              run_database pre
+              run_voip_patrol
+              run_database post
+              run_report
+          fi
+      done
     else
         for SCENARIO in "$@"; do
             CURRENT_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
