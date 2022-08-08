@@ -124,7 +124,7 @@ run_report() {
 
 }
 
-while getopts ":iptrh" opt; do
+while getopts ":ipt:rh" opt; do
   case $opt in
     i)
       pull_images
@@ -133,6 +133,14 @@ while getopts ":iptrh" opt; do
       run_prepare
       ;;
     t)
+      rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
+
+      CURRENT_SCENARIO=`basename ${OPTARG} | cut -f 1 -d .`
+      run_database pre
+      run_voip_patrol
+      run_database post
+      ;;
+    :)
       rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
 
       for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
@@ -153,7 +161,7 @@ while getopts ":iptrh" opt; do
         echo "Options:" >&2
         echo "      -i	pull all images from repository" >&2
         echo "      -p	runs prepare container" >&2
-        echo "      -t	run all tests with database pre, vp, and database post" >&2
+        echo "      -t	if a scenario_name provided, run that specific scenario. Otherwise, run all tests with database pre, vp, and database post" >&2
         echo "      -r	run report container" >&2
         echo "      -h	shows this help" >&2
       ;;
