@@ -48,12 +48,12 @@ class volts {
 
   file { '/root':
     ensure  => directory,
-    source  => 'puppet:///modules/volts',
     recurse => 'true',
     purge   => 'true',
     force   => 'true',
     owner   => 'root',
     group   => 'root',
+    source  => 'puppet:///modules/volts',
     notify  => File['/root/run.sh', '/root/.docker/config.json', '/root/.docker'], 
   }
 
@@ -64,7 +64,7 @@ class volts {
   }
 
   file { '/root/run.sh':
-    ensure    => file,
+    ensure    => present,
     mode      => '0770',
     subscribe => File['/root'],
   }
