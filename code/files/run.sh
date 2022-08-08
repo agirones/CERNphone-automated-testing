@@ -165,10 +165,16 @@ while getopts ":iptrh" opt; do
 done
 
 if [ $OPTIND -eq 1 ]; then
-        pull_images
-        run_prepare
+    pull_images
+    run_prepare
+    rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
+
+    if [ ! -f ${CURRENT_DIRECTORY}/tmp/input/scenarios.done ]; then
+        echo "Scenarios are not prepared, please check for the errors"
+        exit 1
+    fi
+
     if [ "$#" -eq 0 ]; then 
-        rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
         for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
           if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
               CURRENT_SCENARIO=`basename ${DIRECTORY}`
