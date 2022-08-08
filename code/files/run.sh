@@ -175,9 +175,9 @@ if [ $OPTIND -eq 1 ]; then
               run_database pre
               run_voip_patrol
               run_database post
-              run_report
           fi
       done
+              run_report
     else
         for SCENARIO in "$@"; do
             CURRENT_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
