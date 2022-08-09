@@ -19,13 +19,13 @@ for CONTAINER in ${CONTAINERS[@]}; do
     export ${CONTAINER^^}_CONTAINER_NAME=$CONTAINER
 done
 
-CURRENT_DIRECTORY=`pwd`
+WORKING_DIRECTORY=/root
 
 # Volumes paths in host
-PATH_HOST_INPUT=$CURRENT_DIRECTORY/tmp/input
-PATH_HOST_OUTPUT=$CURRENT_DIRECTORY/tmp/output
-PATH_HOST_VOICE_FILES=$CURRENT_DIRECTORY/voice_ref_files
-PATH_HOST_SCENARIOS=$CURRENT_DIRECTORY/scenarios
+PATH_HOST_INPUT=$WORKING_DIRECTORY/tmp/input
+PATH_HOST_OUTPUT=$WORKING_DIRECTORY/tmp/output
+PATH_HOST_VOICE_FILES=$WORKING_DIRECTORY/voice_ref_files
+PATH_HOST_SCENARIOS=$WORKING_DIRECTORY/scenarios
 
 # Volumes in containers
 PATH_PREPARE_INPUT=/opt/input
@@ -39,8 +39,11 @@ PATH_REPORT_OUTPUT=/opt/report
 VP_PORT=5060
 VP_RESULT_FILE="result.jsonl"
 VP_LOG_LEVEL_FILE=${VP_LOG_LEVEL}
+VP_PATH_RESULT_FILE=${WORKING_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
 
 LOCK_DIRECTORY=/tmp/run.lock
+PREPARE_CHECK=/root/tmp/input/scenarios.done
+
 
 pull_images() {
     for CONTAINER in ${CONTAINERS[@]}; do
@@ -63,15 +66,15 @@ run_prepare() {
         --rm \
         ${PREPARE_IMAGE_NAME}
 
-    if [ ! -f ${CURRENT_DIRECTORY}/tmp/input/scenarios.done ]; then
+    if [ ! -f $PREPARE_CHECK ]; then
         echo "Scenarios are not prepared, please check for the errors"
         exit 1
     fi
 }
 
 run_database() {
-    PATH_HOST_DB_CONFIGURATION=${CURRENT_DIRECTORY}/tmp/input/${CURRENT_SCENARIO}/database.xml
-    PATH_DB_CONFIGURATION=/xml/${CURRENT_SCENARIO}.xml
+    PATH_HOST_DB_CONFIGURATION=${WORKING_DIRECTORY}/tmp/input/${WORKING_SCENARIO}/database.xml
+    PATH_DB_CONFIGURATION=/xml/${WORKING_SCENARIO}.xml
 
     docker rm ${DATABASE_CONTAINER_NAME} >> /dev/null 2>&1
 
@@ -80,7 +83,7 @@ run_database() {
     fi
 
     docker run --name=${DATABASE_CONTAINER_NAME} \
-        --env SCENARIO=`echo ${CURRENT_SCENARIO}` \
+        --env SCENARIO=`echo ${WORKING_SCENARIO}` \
         --env STAGE=`echo $1` \
         --volume $PATH_HOST_DB_CONFIGURATION:$PATH_DB_CONFIGURATION \
         --network host \
@@ -90,15 +93,15 @@ run_database() {
 }
  
 run_voip_patrol() {
-    PATH_HOST_VP_CONFIGURATION=$CURRENT_DIRECTORY/tmp/input/${CURRENT_SCENARIO}/voip_patrol.xml
-    PATH_VP_CONFIGURATION=/xml/${CURRENT_SCENARIO}.xml
+    PATH_HOST_VP_CONFIGURATION=$WORKING_DIRECTORY/tmp/input/${WORKING_SCENARIO}/voip_patrol.xml
+    PATH_VP_CONFIGURATION=/xml/${WORKING_SCENARIO}.xml
 
     if [ ! -f $PATH_HOST_VP_CONFIGURATION ]; then
         return
     fi
 
     docker run --name=${VP_CONTAINER_NAME} \
-    --env XML_CONF=`echo ${CURRENT_SCENARIO}` \
+    --env XML_CONF=`echo ${WORKING_SCENARIO}` \
     --env PORT=`echo ${VP_PORT}` \
     --env RESULT_FILE=`echo ${VP_RESULT_FILE}` \
     --env LOG_LEVEL=`echo ${VP_LOG_LEVEL}` \
@@ -140,19 +143,19 @@ while getopts ":ipt:rh" opt; do
       run_prepare
       ;;
     t)
-      rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
+      rm -f $VP_PATH_RESULT_FILE
 
-      CURRENT_SCENARIO=`basename ${OPTARG} | cut -f 1 -d .`
+      WORKING_SCENARIO=`basename ${OPTARG} | cut -f 1 -d .`
       run_database pre
       run_voip_patrol
       run_database post
       ;;
     :)
-      rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
+      rm -f $VP_PATH_RESULT_FILE
 
-      for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
+      for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
         if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
-            CURRENT_SCENARIO=`basename ${DIRECTORY}`
+            WORKING_SCENARIO=`basename ${DIRECTORY}`
             run_database pre
             run_voip_patrol
             run_database post
@@ -182,17 +185,17 @@ done
 if [ $OPTIND -eq 1 ]; then
     pull_images
     run_prepare
-    rm -f ${CURRENT_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
+    rm -f $VP_PATH_RESULT_FILE
 
-    if [ ! -f ${CURRENT_DIRECTORY}/tmp/input/scenarios.done ]; then
+    if [ ! -f ${WORKING_DIRECTORY}/tmp/input/scenarios.done ]; then
         echo "Scenarios are not prepared, please check for the errors"
         exit 1
     fi
 
     if [ "$#" -eq 0 ]; then 
-        for DIRECTORY in ${CURRENT_DIRECTORY}/tmp/input/*; do
+        for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
           if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
-              CURRENT_SCENARIO=`basename ${DIRECTORY}`
+              WORKING_SCENARIO=`basename ${DIRECTORY}`
               run_database pre
               run_voip_patrol
               run_database post
@@ -200,7 +203,7 @@ if [ $OPTIND -eq 1 ]; then
       done
     else
         for SCENARIO in "$@"; do
-            CURRENT_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
+            WORKING_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
             run_database pre
             run_voip_patrol
             run_database post
