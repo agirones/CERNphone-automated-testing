@@ -81,7 +81,7 @@ class volts {
     command     => 'FILE=$(date +%y-%m-%d%k:%M.log | sed "s/ /_/g") && ./run.sh > /home/agirones/reports/$FILE && cp /tmp/output/report.jsonl /home/agirones/reports/$FILE.jsonl',
     enviroment  => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
     user        => 'root',
-    minute      => */20,
+    minute      => '*/20',
     hour        => absent,
     monthday    => absent,
     month       => absent,
