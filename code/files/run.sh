@@ -124,7 +124,6 @@ run_report() {
         --volume $PATH_HOST_INPUT:$PATH_REPORT_INPUT \
         --volume $PATH_HOST_OUTPUT:$PATH_REPORT_OUTPUT \
         --network host \
-        --rm \
         ${REPORT_IMAGE_NAME}
 
 }
