@@ -48,7 +48,7 @@ PREPARE_CHECK=/root/tmp/input/scenarios.done
 pull_images() {
     for CONTAINER in ${CONTAINERS[@]}; do
         REPOSITORY=${CONTAINER^^}_IMAGE_NAME
-        docker pull ${!REPOSITORY}
+        docker pull ${!REPOSITORY}:latest
     done
 }
 
