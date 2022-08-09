@@ -54,7 +54,7 @@ pull_images() {
 
 
 run_prepare() {
-    rm -f tmp/input/scenarios.done
+    rm -f $PREPARE_CHECK
 
     docker rm ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
 
@@ -186,11 +186,6 @@ if [ $OPTIND -eq 1 ]; then
     pull_images
     run_prepare
     rm -f $VP_PATH_RESULT_FILE
-
-    if [ ! -f ${WORKING_DIRECTORY}/tmp/input/scenarios.done ]; then
-        echo "Scenarios are not prepared, please check for the errors"
-        exit 1
-    fi
 
     if [ "$#" -eq 0 ]; then 
         for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
