@@ -66,20 +66,26 @@ class volts {
   file { '/root/run.sh':
     ensure    => present,
     mode      => '0770',
-    source  => 'puppet:///modules/volts/run.sh',
+    source    => 'puppet:///modules/volts/run.sh',
     subscribe => File['/root'],
   }
 
-#  cron { 'run tests':
-#    ensure      => present,
-#    command     => '/root/run.sh',
-#    enviroment  => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
-#    user        => 'root',
-#    minute      => [0, 30],
-#    hour        => absent,
-#    monthday    => absent,
-#    month       => absent,
-#    weekday     => absent,
-#  }
+  file { '/home/agirones/reports':
+    ensure => directory,
+    mode   => '0660',
+    notify => Cron['run tests'],
+  }
+
+  cron { 'run tests':
+    ensure      => present,
+    command     => 'FILE=$(date +\%y-\%m-\%d\%k:\%M | sed "s/ /_/g") && /root/run.sh > /home/agirones/reports/$FILE.log && cp /root/tmp/output/result.jsonl /home/agirones/reports/$FILE.jsonl',
+    environment => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
+    user        => 'root',
+    minute      => '0',
+    hour        => absent,
+    monthday    => absent,
+    month       => absent,
+    weekday     => absent,
+  }
 
 }
