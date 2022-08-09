@@ -1,7 +1,7 @@
 #!/bin/bash
 # Main user controlled variables
 # Report type to provide
-REPORT_TYPE='table_full'
+REPORT_TYPE='monit_report'
 # voip_patrol log level on console
 VP_LOG_LEVEL=0
 
