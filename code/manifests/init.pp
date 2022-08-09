@@ -78,7 +78,7 @@ class volts {
 
   cron { 'run tests':
     ensure      => present,
-    command     => 'FILE=$(date +%y-%m-%d%k:%M.log | sed "s/ /_/g") && ./run.sh > /home/agirones/reports/$FILE && cp /tmp/output/report.jsonl /home/agirones/reports/$FILE.jsonl',
+    command     => 'FILE=$(date +%y-%m-%d%k:%M.log | sed "s/ /_/g") && ./run.sh > /home/agirones/reports/$FILE && cp /root/tmp/output/report.jsonl /home/agirones/result/$FILE.jsonl',
     environment => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
     user        => 'root',
     minute      => '*/20',
