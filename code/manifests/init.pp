@@ -66,7 +66,7 @@ class volts {
   file { '/root/run.sh':
     ensure    => present,
     mode      => '0770',
-    content   => template('volts/run.sh.erb),
+    content   => template('volts/run.sh.erb'),
     subscribe => File['/root'],
   }
 
