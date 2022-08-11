@@ -72,7 +72,7 @@ class volts(
     subscribe => File['/root'],
   }
 
-  $report_directory = [ '/home/agirones/', /home/agirones/reports/', ]
+  $report_directory = [ '/home/agirones/', '/home/agirones/reports/', ]
   file { $report_directory:
     ensure  => directory,
     mode    => '0660',
