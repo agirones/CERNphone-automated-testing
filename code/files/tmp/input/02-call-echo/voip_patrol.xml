@@ -1,9 +1,0 @@
-<config>
-    <actions>
-        <action disable="all" type="codec" />
-        <action enable="pcma" priority="250" type="codec" />
-        <action enable="pcmu" priority="249" type="codec" />
-        <action auth_username="88881-31896" callee="11111@dev.tone.cern.ch" caller="88881@dev.tone.cern.ch" expected_cause_code="200" from="sip:88881@dev.tone.cern.ch" hangup="10" label="Call to 11111 (echo)" max_duration="20" password="29816" play="/voice_ref_files/8000_2m30.wav" realm="dev.tone.cern.ch" rtp_stats="true" srtp="sdes,force" to_uri="11111@dev.tone.cern.ch" transport="tls" type="call" />
-    <action complete="true" ms="30000" type="wait" />
-    </actions>
-</config>

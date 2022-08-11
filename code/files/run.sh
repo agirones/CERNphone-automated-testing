@@ -41,8 +41,12 @@ VP_RESULT_FILE="result.jsonl"
 VP_LOG_LEVEL_FILE=${VP_LOG_LEVEL}
 VP_PATH_RESULT_FILE=${WORKING_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
 
-LOCK_DIRECTORY=/tmp/run.lock
-PREPARE_CHECK=/root/tmp/input/scenarios.done
+# database
+DATABASE_RESULT_FILE="database.jsonl"
+DATABASE_PATH_RESULT_FILE=${WORKING_DIRECTORY}/tmp/output/${DATABASE_RESULT_FILE}
+
+LOCK_DIRECTORY=/tmp/volts.lock
+PREPARE_CHECK=$WORKING_DIRECTORY/tmp/input/scenarios.done
 
 
 pull_images() {
@@ -55,7 +59,9 @@ pull_images() {
 
 run_prepare() {
     rm -f $PREPARE_CHECK
+    mkdir -p $WORKING_DIRECTORY/tmp/{input,output}
 
+    docker stop ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
     docker rm ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
 
     docker run --name=${PREPARE_CONTAINER_NAME} \
@@ -76,6 +82,7 @@ run_database() {
     PATH_HOST_DB_CONFIGURATION=${WORKING_DIRECTORY}/tmp/input/${WORKING_SCENARIO}/database.xml
     PATH_DB_CONFIGURATION=/xml/${WORKING_SCENARIO}.xml
 
+    docker stop ${DATABASE_CONTAINER_NAME} >> /dev/null 2>&1
     docker rm ${DATABASE_CONTAINER_NAME} >> /dev/null 2>&1
 
     if [ ! -f $PATH_HOST_DB_CONFIGURATION ]; then 
@@ -116,6 +123,7 @@ run_voip_patrol() {
 }
 
 run_report() {
+    docker stop ${REPORT_CONTAINER_NAME} >> /dev/null 2>&1
     docker rm ${REPORT_CONTAINER_NAME} >> /dev/null 2>&1
 
     docker run --name=${REPORT_CONTAINER_NAME} \
@@ -124,6 +132,7 @@ run_report() {
         --volume $PATH_HOST_INPUT:$PATH_REPORT_INPUT \
         --volume $PATH_HOST_OUTPUT:$PATH_REPORT_OUTPUT \
         --network host \
+        --rm \
         ${REPORT_IMAGE_NAME}
 
 }
@@ -143,6 +152,7 @@ while getopts ":ipt:rh" opt; do
       ;;
     t)
       rm -f $VP_PATH_RESULT_FILE
+      rm -f $DATABASE_PATH_RESULT_FILE
 
       WORKING_SCENARIO=`basename ${OPTARG} | cut -f 1 -d .`
       run_database pre
@@ -151,6 +161,7 @@ while getopts ":ipt:rh" opt; do
       ;;
     :)
       rm -f $VP_PATH_RESULT_FILE
+      rm -f $DATABASE_PATH_RESULT_FILE
 
       for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
         if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
@@ -165,10 +176,12 @@ while getopts ":ipt:rh" opt; do
       run_report
       ;;
     h)
-        echo "Usage:  run.sh [OPTIONS] test_names"
+        echo "Usage:  run.sh [-hpru] [-t test] [tests]"
+        echo ""
+        echo "If no option is provided the script will pull the images and run all the containers and tests" >&2
         echo ""
         echo "Options:" >&2
-        echo "      -i	pull all images from repository" >&2
+        echo "      -u	pull all images from repository" >&2
         echo "      -p	runs prepare container" >&2
         echo "      -t	if a scenario_name provided, run that specific scenario. Otherwise, run all tests with database pre, vp, and database post" >&2
         echo "      -r	run report container" >&2
@@ -185,6 +198,7 @@ if [ $OPTIND -eq 1 ]; then
     pull_images
     run_prepare
     rm -f $VP_PATH_RESULT_FILE
+    rm -f $DATABASE_PATH_RESULT_FILE
 
     if [ "$#" -eq 0 ]; then 
         for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
@@ -205,4 +219,4 @@ if [ $OPTIND -eq 1 ]; then
     fi
     run_report
 fi
-rm -r /tmp/run.lock
+rm -r $LOCK_DIRECTORY

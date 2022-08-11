@@ -1,6 +1,0 @@
-<config>
-    <actions>
-        <action account="88881-31896" auth_username="88881-31896" expected_cause_code="488" label="Register 88881-31896" password="29816" realm="dev.tone.cern.ch" registrar="dev.tone.cern.ch" transport="tls" type="register" username="88881-31896" />
-        <action complete="true" ms="2000" type="wait" />
-    </actions>
-</config>
