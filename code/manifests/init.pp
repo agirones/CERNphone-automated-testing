@@ -1,4 +1,6 @@
-class volts {
+class volts(
+  $report_type
+) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
   class{'::docker':
