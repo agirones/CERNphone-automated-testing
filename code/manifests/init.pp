@@ -74,11 +74,7 @@ class volts(
 
   file { '/home/agirones/reports':
     ensure  => directory,
-    recurse => 'true',
-    purge   => 'true',
-    force   => 'true',
     mode    => '0660',
-    notify  => Cron['run tests'],
   }
 
   cron { 'run tests':
