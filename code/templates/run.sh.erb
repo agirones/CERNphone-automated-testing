@@ -143,9 +143,9 @@ if ! mkdir "$LOCK_DIRECTORY"; then
   exit 1
 fi
 
-while getopts ":ipt:rh" opt; do
+while getopts ":upt:rh" opt; do
   case $opt in
-    i)
+    u)
       pull_images
       ;;
     p)
