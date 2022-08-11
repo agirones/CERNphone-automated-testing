@@ -1,5 +1,5 @@
 class volts(
-  $report_type
+  $report_type = 'table_full'
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
