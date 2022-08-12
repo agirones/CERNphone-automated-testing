@@ -5,7 +5,7 @@ class volts (
   $threshold_unavailable,
   $cron_min,
   $logs_backup_days,
-  $alert_email,
+  $alert_email = hiera('hg_tone::alert_email'),
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
