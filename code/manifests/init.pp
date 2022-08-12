@@ -1,6 +1,4 @@
-class volts(
-  $report_type = 'table_full'
-) {
+class volts {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
   class{'::docker':
@@ -65,6 +63,7 @@ class volts(
     subscribe => File['/root'],
   }
 
+  $report_type = hiera('report_type')
   file { '/root/run.sh':
     ensure    => present,
     mode      => '0770',
