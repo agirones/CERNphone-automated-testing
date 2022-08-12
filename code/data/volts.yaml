@@ -5,3 +5,4 @@ volts::threshold_degraded: 3
 volts::threshold_unavailable: 4
 volts::cron_min: 0
 volts::logs_backup_days: 30
+volts::sent_to_monit: True

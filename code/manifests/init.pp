@@ -6,6 +6,7 @@ class volts (
   $cron_min,
   $logs_backup_days,
   $alert_email = hiera('hg_tone::alert_email'),
+  $sent_to_monit,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
