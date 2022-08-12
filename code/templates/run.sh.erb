@@ -133,7 +133,7 @@ run_report() {
         --env MONIT_ADDRESS='<%= @monit_address %>' \
         --env THRESHOLD_DEGRADED='<%= @threshold_degraded %>' \
         --env THRESHOLD_UNAVAILABLE='<%= @threshold_unavailable %>' \
-        --env SENT_TO_MONIT='<%= @sent_to_monit %>' \
+        --env SEND_TO_MONIT='<%= @send_to_monit %>' \
         --volume $PATH_HOST_INPUT:$PATH_REPORT_INPUT \
         --volume $PATH_HOST_OUTPUT:$PATH_REPORT_OUTPUT \
         --network host \
