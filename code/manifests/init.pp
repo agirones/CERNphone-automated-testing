@@ -1,5 +1,6 @@
 class volts (
   $report_type,
+  $monit_address,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
