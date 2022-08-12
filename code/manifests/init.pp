@@ -4,6 +4,7 @@ class volts (
   $threshold_degraded,
   $threshold_unavailable,
   $cron_min,
+  $logs_backup_days,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
@@ -77,7 +78,7 @@ class volts (
   file { '/root/log.sh':
     ensure    => present,
     mode      => '0770',
-    content   => file('volts/log.sh'),
+    content   => template('volts/log.sh.erb'),
     subscribe => File['/root'],
   }
 
