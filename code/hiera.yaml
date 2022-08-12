@@ -4,5 +4,5 @@ defaults:
   datadir: data
   data_hash: yaml_data
 hierarchy:
-  - name: "common"
-    path: "common.yaml"
+  - name: "volts"
+    path: "volts.yaml"
