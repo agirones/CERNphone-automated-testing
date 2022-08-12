@@ -5,6 +5,7 @@ class volts (
   $threshold_unavailable,
   $cron_min,
   $logs_backup_days,
+  $alert_email,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
@@ -91,7 +92,7 @@ class volts (
   cron { 'run tests':
     ensure      => present,
     command     => '/root/log.sh',
-    environment => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
+    environment => 'MAILTO="${alert_email}"',
     user        => 'root',
     minute      => "${cron_min}",
     hour        => absent,
