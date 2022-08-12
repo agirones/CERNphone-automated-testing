@@ -3,6 +3,7 @@ class volts (
   $monit_address,
   $threshold_degraded,
   $threshold_unavailable,
+  $cron_min,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
@@ -91,7 +92,7 @@ class volts (
     command     => '/root/log.sh',
     environment => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
     user        => 'root',
-    minute      => '${cron_min}',
+    minute      => "${cron_min}",
     hour        => absent,
     monthday    => absent,
     month       => absent,
