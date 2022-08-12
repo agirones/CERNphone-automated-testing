@@ -91,7 +91,7 @@ class volts (
   cron { 'run tests':
     ensure      => present,
     command     => '/root/log.sh',
-    environment => 'MAILTO="${alert_email}"',
+    environment => "MAILTO=${alert_email}",
     user        => 'root',
     minute      => "${cron_min}",
     hour        => absent,
