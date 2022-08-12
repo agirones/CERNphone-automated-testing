@@ -1,3 +1,5 @@
 ---
 volts::report_type: 'monit_report'
 volts::monit_address: 'http://monit-metrics:10012/'
+volts::threshold_degraded: 3
+volts::threshold_unavailable: 4

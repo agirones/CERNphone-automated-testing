@@ -1,6 +1,8 @@
 class volts (
   $report_type,
   $monit_address,
+  $threshold_degraded,
+  $threshold_unavailable,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
