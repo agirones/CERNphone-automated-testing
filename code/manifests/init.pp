@@ -72,6 +72,13 @@ class volts (
     subscribe => File['/root'],
   }
 
+  file { '/root/log.sh':
+    ensure    => present,
+    mode      => '0770',
+    content   => file('volts/log.sh'),
+    subscribe => File['/root'],
+  }
+
   $report_directory = [ '/home/agirones/', '/home/agirones/reports/', ]
   file { $report_directory:
     ensure  => directory,
@@ -80,7 +87,7 @@ class volts (
 
   cron { 'run tests':
     ensure      => present,
-    command     => 'FILE=$(date +\%y-\%m-\%d_\%H:\%M) && /root/run.sh > /home/agirones/reports/$FILE.log && cp /root/tmp/output/result.jsonl /home/agirones/reports/$FILE.jsonl',
+    command     => '/root/log.sh',
     environment => 'MAILTO=andreu.girones.de.la.fuente@cern.ch',
     user        => 'root',
     minute      => '0',
