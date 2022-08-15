@@ -7,6 +7,7 @@ class volts (
   $logs_backup_days,
   $alert_email = hiera('hg_tone::alert_email'),
   $send_to_monit,
+  $docker_repository,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
@@ -39,19 +40,19 @@ class volts (
     ],
   }
 
-  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/prepare':
+  docker::image { "${docker_repository}/prepare":
     ensure    => 'present',
   }
 
-  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/database':
+  docker::image { "${docker_repository}/database":
     ensure    => 'present',
   }
 
-  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/vp':
+  docker::image { "${docker_repository}/vp":
     ensure    => 'present',
   }
 
-  docker::image { 'gitlab-registry.cern.ch/agirones/functional-testing/report':
+  docker::image { "${docker_repository}/report":
     ensure    => 'present',
   }
 

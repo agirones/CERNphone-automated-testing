@@ -131,8 +131,8 @@ run_report() {
         --env REPORT_FILE=`echo ${VP_RESULT_FILE}` \
         --env REPORT_TYPE=`echo ${REPORT_TYPE}` \
         --env MONIT_ADDRESS='<%= @monit_address %>' \
-        --env THRESHOLD_DEGRADED='<%= @threshold_degraded %>' \
-        --env THRESHOLD_UNAVAILABLE='<%= @threshold_unavailable %>' \
+        --env THRESHOLD_DEGRADED=<%= @threshold_degraded %> \
+        --env THRESHOLD_UNAVAILABLE=<%= @threshold_unavailable %> \
         --env SEND_TO_MONIT='<%= @send_to_monit %>' \
         --volume $PATH_HOST_INPUT:$PATH_REPORT_INPUT \
         --volume $PATH_HOST_OUTPUT:$PATH_REPORT_OUTPUT \
