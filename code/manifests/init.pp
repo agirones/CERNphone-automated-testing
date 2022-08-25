@@ -6,7 +6,7 @@ class volts (
   $cron_min,
   $logs_backup_days,
   $alert_email = hiera('hg_tone::alert_email'),
-  $send_to_monit,
+  $is_send_to_monit,
   $docker_repository,
 ) {
 
