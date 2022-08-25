@@ -8,7 +8,7 @@ VP_LOG_LEVEL=0
 
 # Private variables
 declare -a CONTAINERS=('database' 'prepare' 'vp' 'report' )
-export REGISTRY='gitlab-registry.cern.ch/agirones/functional-testing/'
+export REGISTRY='<%= @docker_repository %>'
 
 # Images names
 for CONTAINER in ${CONTAINERS[@]}; do
@@ -38,7 +38,7 @@ PATH_REPORT_OUTPUT=/opt/report
 
 # voip_patrol
 VP_PORT=5060
-VP_RESULT_FILE="result.jsonl"
+VP_RESULT_FILE="voip_patrol.jsonl"
 VP_LOG_LEVEL_FILE=${VP_LOG_LEVEL}
 VP_PATH_RESULT_FILE=${WORKING_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
 
