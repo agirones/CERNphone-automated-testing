@@ -56,39 +56,26 @@ class volts (
     ensure    => 'present',
   }
 
-  file { '/root':
-    ensure  => directory,
-    recurse => 'true',
-    owner   => 'root',
-    group   => 'root',
-    source  => 'puppet:///modules/volts',
-    notify  => File['/root/run.sh', '/root/.docker/config.json', '/root/.docker'], 
-  }
-
   file { '/root/.docker':
     ensure    => directory,
     mode      => '0660',
-    subscribe => File['/root'],
   }
 
   file { '/root/run.sh':
     ensure    => present,
     mode      => '0770',
     content   => template('volts/run.sh.erb'),
-    subscribe => File['/root'],
+  }
+
+  file { '/var/log/volts':
+    ensure  => directory,
+    mode    => '0660',
   }
 
   file { '/root/log.sh':
     ensure    => present,
     mode      => '0770',
     content   => template('volts/log.sh.erb'),
-    subscribe => File['/root'],
-  }
-
-  $report_directory = [ '/home/agirones/', '/home/agirones/reports/', ]
-  file { $report_directory:
-    ensure  => directory,
-    mode    => '0660',
   }
 
   cron { 'run tests':
