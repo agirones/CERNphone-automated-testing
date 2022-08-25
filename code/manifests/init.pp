@@ -72,15 +72,15 @@ class volts (
     mode    => '0660',
   }
 
-  file { '/root/log.sh':
+  file { '/root/run_and_log.sh':
     ensure    => present,
     mode      => '0770',
-    content   => template('volts/log.sh.erb'),
+    content   => template('volts/run_and_log.sh.erb'),
   }
 
   cron { 'run tests':
     ensure      => present,
-    command     => '/root/log.sh',
+    command     => '/root/run_and_log.sh',
     environment => "MAILTO=${alert_email}",
     user        => 'root',
     minute      => "${cron_min}",
