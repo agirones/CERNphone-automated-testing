@@ -22,6 +22,8 @@ done
 
 WORKING_DIRECTORY=/root
 
+TIMEZONE=Europe/Paris
+
 # Volumes paths in host
 PATH_HOST_INPUT=$WORKING_DIRECTORY/tmp/input
 PATH_HOST_OUTPUT=$WORKING_DIRECTORY/tmp/output
@@ -134,6 +136,7 @@ run_report() {
         --env THRESHOLD_DEGRADED=<%= @threshold_degraded %> \
         --env THRESHOLD_UNAVAILABLE=<%= @threshold_unavailable %> \
         --env IS_SEND_TO_MONIT='<%= @is_send_to_monit %>' \
+        --env CONTACT='<%= @contact %>' \
         --volume $PATH_HOST_INPUT:$PATH_REPORT_INPUT \
         --volume $PATH_HOST_OUTPUT:$PATH_REPORT_OUTPUT \
         --network host \
