@@ -57,6 +57,7 @@ pull_images() {
         REPOSITORY=${CONTAINER^^}_IMAGE_NAME
         docker pull ${!REPOSITORY}:latest
     done
+    docker image prune -f > /dev/null
 }
 
 
