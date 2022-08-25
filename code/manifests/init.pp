@@ -25,17 +25,17 @@ class volts (
     priority => 10,
   }
 
-  teigi::secret { 'gitlab-registry-token':
-    key    => 'gitlab-registry-token',
-    path   => '/etc/gitlab-registry-token',
+  teigi::secret { 'funct-test-registry-read':
+    key    => 'funct-test-registry-read',
+    path   => '/etc/funct-test-registry-read',
     notify => Teigi::Secret::Sub_file['/root/.docker/config.json'], 
   }
 
   teigi::secret::sub_file { '/root/.docker/config.json':
     content    => template('volts/config.json.erb'),
-    teigi_keys => ['gitlab-registry-token'],
+    teigi_keys => ['funct-test-registry-read'],
     subscribe  => [
-      Teigi::Secret['gitlab-registry-token'],
+      Teigi::Secret['funct-test-registry-read'],
     ],
   }
 
