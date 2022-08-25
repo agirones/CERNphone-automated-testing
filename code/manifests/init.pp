@@ -36,7 +36,6 @@ class volts (
     teigi_keys => ['gitlab-registry-token'],
     subscribe  => [
       Teigi::Secret['gitlab-registry-token'],
-      File['/root'],
     ],
   }
 
