@@ -150,81 +150,19 @@ if ! mkdir "$LOCK_DIRECTORY"; then
   exit 1
 fi
 
-while getopts ":upt:rh" opt; do
-  case $opt in
-    u)
-      pull_images
-      ;;
-    p)
-      run_prepare
-      ;;
-    t)
-      rm -f $VP_PATH_RESULT_FILE
-      rm -f $DATABASE_PATH_RESULT_FILE
+pull_images
+run_prepare
+rm -f $VP_PATH_RESULT_FILE
+rm -f $DATABASE_PATH_RESULT_FILE
 
-      WORKING_SCENARIO=`basename ${OPTARG} | cut -f 1 -d .`
+for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
+  if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
+      WORKING_SCENARIO=`basename ${DIRECTORY}`
       run_database pre
       run_voip_patrol
       run_database post
-      ;;
-    :)
-      rm -f $VP_PATH_RESULT_FILE
-      rm -f $DATABASE_PATH_RESULT_FILE
-
-      for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
-        if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
-            WORKING_SCENARIO=`basename ${DIRECTORY}`
-            run_database pre
-            run_voip_patrol
-            run_database post
-        fi
-      done
-      ;;
-    r)
-      run_report
-      ;;
-    h)
-        echo "Usage:  run.sh [-hpru] [-t test] [tests]"
-        echo ""
-        echo "If no option is provided the script will pull the images and run all the containers and tests" >&2
-        echo ""
-        echo "Options:" >&2
-        echo "      -u	pull all images from repository" >&2
-        echo "      -p	runs prepare container" >&2
-        echo "      -t	if a scenario_name provided, run that specific scenario. Otherwise, run all tests with database pre, vp, and database post" >&2
-        echo "      -r	run report container" >&2
-        echo "      -h	shows this help" >&2
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-  esac
+  fi
 done
 
-if [ $OPTIND -eq 1 ]; then
-    pull_images
-    run_prepare
-    rm -f $VP_PATH_RESULT_FILE
-    rm -f $DATABASE_PATH_RESULT_FILE
-
-    if [ "$#" -eq 0 ]; then 
-        for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
-          if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
-              WORKING_SCENARIO=`basename ${DIRECTORY}`
-              run_database pre
-              run_voip_patrol
-              run_database post
-          fi
-      done
-    else
-        for SCENARIO in "$@"; do
-            WORKING_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
-            run_database pre
-            run_voip_patrol
-            run_database post
-        done
-    fi
-    run_report
-fi
+run_report
 rm -r $LOCK_DIRECTORY
