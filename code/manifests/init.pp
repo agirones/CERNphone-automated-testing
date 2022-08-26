@@ -28,7 +28,7 @@ class volts (
   }
 
   docker::registry { 'gitlab-registry.cern.ch':
-    username => hiera('docker_username'),
+    username => hiera('volts::docker_username'),
     password => Deferred('teigi::get', ['funct-test-registry-read']),
   }
 
