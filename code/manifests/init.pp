@@ -30,7 +30,7 @@ class volts (
 
   docker::registry { 'gitlab-registry.cern.ch':
     username => $docker_username,
-    password => teigi::funct-test-registry-read,
+    password => hiera('teigi::funct-test-registry-read'),
   }
 
   docker::image { "${docker_repository}/prepare":
