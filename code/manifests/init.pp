@@ -64,7 +64,7 @@ class volts (
     recurse => 'true',
     owner   => 'root',
     group   => 'root',
-    notify  => File['/root/run.sh', '/root/run_and_log'], 
+    notify  => File['/root/run.sh', '/root/run_and_log.sh'], 
   }
 
   file { '/root/run.sh':
