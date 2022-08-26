@@ -53,7 +53,7 @@ PREPARE_CHECK=$WORKING_DIRECTORY/tmp/input/scenarios.done
 
 
 pull_images() {
-    cat /root/funct-test-registry-read | docker login -u <%= @docker_username %> --password-stdin
+    cat /root/funct-test-registry-read | docker login -u <%= @docker_username %> --password-stdin gitlab-registry.cern.ch
     for CONTAINER in ${CONTAINERS[@]}; do
         REPOSITORY=${CONTAINER^^}_IMAGE_NAME
         docker pull ${!REPOSITORY}:latest
