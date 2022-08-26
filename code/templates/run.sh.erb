@@ -148,7 +148,7 @@ run_report() {
 }
 
 cleanup() {
-  rm -r $LOCK_DIRECTORY
+  rm -rf $LOCK_DIRECTORY
 }
 
 
@@ -174,4 +174,4 @@ for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
 done
 
 run_report
-rm -r $LOCK_DIRECTORY
+rm -rf $LOCK_DIRECTORY
