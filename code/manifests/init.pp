@@ -8,6 +8,7 @@ class volts (
   $alert_email = hiera('hg_tone::alert_email'),
   $is_send_to_monit,
   $docker_repository,
+  $docker_username,
   $vp_result_file_name,
   $db_result_file_name,
 ) {
@@ -28,7 +29,7 @@ class volts (
   }
 
   docker::registry { 'gitlab-registry.cern.ch':
-    username => hiera('volts::docker_username'),
+    username => $docker_username,
     password => Deferred('teigi::get', ['funct-test-registry-read']),
   }
 
