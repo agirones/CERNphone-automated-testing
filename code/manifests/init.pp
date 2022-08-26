@@ -8,7 +8,6 @@ class volts (
   $alert_email = hiera('hg_tone::alert_email'),
   $is_send_to_monit,
   $docker_repository,
-  $docker_username,
   $vp_result_file_name,
   $db_result_file_name,
 ) {
