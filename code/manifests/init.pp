@@ -28,11 +28,11 @@ class volts (
   teigi::secret { 'funct-test-registry-read':
     key    => 'funct-test-registry-read',
     path   => '/etc/funct-test-registry-read',
-    notify => Teigi::Secret::Sub_file['/root/.docker/config.json'], 
+    notify => Teigi::Secret::Sub_file['/root/funct-test-registry-read'], 
   }
 
-  teigi::secret::sub_file { '/root/.docker/config.json':
-    content    => template('volts/config.json.erb'),
+  teigi::secret::sub_file { '/root/funct-test-registry-read':
+    content    => template('volts/funct-test-registry-read.erb'),
     teigi_keys => ['funct-test-registry-read'],
     subscribe  => [
       Teigi::Secret['funct-test-registry-read'],

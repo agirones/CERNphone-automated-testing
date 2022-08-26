@@ -8,3 +8,4 @@ volts::logs_backup_days: 30
 volts::is_send_to_monit: 'True'
 volts::docker_repository: 'gitlab-registry.cern.ch/cernphone/functional-testing/'
 volts::contact: 'ihor.olkhovskyi@cern.ch'
+volts::docker_username: 'agirones'
