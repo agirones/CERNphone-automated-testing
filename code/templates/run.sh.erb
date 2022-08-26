@@ -146,6 +146,12 @@ run_report() {
 
 }
 
+cleanup() {
+  rm -r $LOCK_DIRECTORY
+}
+
+trap cleanup EXIT
+
 if ! mkdir "$LOCK_DIRECTORY"; then
   echo >&2 "cannot acquire lock, giving up on $LOCK_DIRECTORY"
   exit 1
