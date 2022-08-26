@@ -28,18 +28,9 @@ class volts (
     priority => 10,
   }
 
-  teigi::secret { 'funct-test-registry-read':
-    key    => 'funct-test-registry-read',
-    path   => '/etc/funct-test-registry-read',
-    notify => Teigi::Secret::Sub_file['/root/funct-test-registry-read'], 
-  }
-
-  teigi::secret::sub_file { '/root/funct-test-registry-read':
-    content    => template('volts/funct-test-registry-read.erb'),
-    teigi_keys => ['funct-test-registry-read'],
-    subscribe  => [
-      Teigi::Secret['funct-test-registry-read'],
-    ],
+  docker::registry { 'gitlab-registry.cern.ch':
+    username => hiera('docker_username'),
+    password => Deferred('teigi::get', ['funct-test-registry-read']),
   }
 
   docker::image { "${docker_repository}/prepare":
