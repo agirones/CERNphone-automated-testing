@@ -1,7 +1,6 @@
 #!/bin/bash
 # Main user controlled variables
 # Report type to provide
-#REPORT_TYPE='monit_report'
 REPORT_TYPE='<%= @report_type %>'
 # voip_patrol log level on console
 VP_LOG_LEVEL=0
@@ -23,6 +22,7 @@ done
 WORKING_DIRECTORY=/root
 
 TIMEZONE=Europe/Paris
+CONTACT='ihor.olkhovskyi@cern.ch'
 
 # Volumes paths in host
 PATH_HOST_INPUT=$WORKING_DIRECTORY/tmp/input
@@ -47,13 +47,20 @@ VP_PATH_RESULT_FILE=${WORKING_DIRECTORY}/tmp/output/${VP_RESULT_FILE}
 # database
 DATABASE_RESULT_FILE="<%= @db_result_file_name %>"
 DATABASE_PATH_RESULT_FILE=${WORKING_DIRECTORY}/tmp/output/${DATABASE_RESULT_FILE}
+PATH_DB_OUTPUT=/output
+
+# report
+MONIT_ADDRESS='http://monit-metrics:10012/'
+THRESHOLD_DEGRADED=3
+THRESHOLD_UNAVAILABLE=4
+IS_SEND_TO_MONIT='True'
 
 LOCK_DIRECTORY=/tmp/volts.lock
 PREPARE_CHECK=$WORKING_DIRECTORY/tmp/input/scenarios.done
 
 
 pull_images() {
-  cat /root/funct-test-registry-read | docker login -u <%= @docker_username %> --password-stdin gitlab-registry.cern.ch 2>/dev/null
+    cat /root/funct-test-registry-read | docker login -u <%= @docker_username %> --password-stdin gitlab-registry.cern.ch 2>/dev/null
     for CONTAINER in ${CONTAINERS[@]}; do
         REPOSITORY=${CONTAINER^^}_IMAGE_NAME
         docker pull ${!REPOSITORY}:latest
@@ -66,16 +73,16 @@ run_prepare() {
     rm -f $PREPARE_CHECK
     mkdir -p $WORKING_DIRECTORY/tmp/{input,output}
 
-    docker stop ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
-    docker rm ${PREPARE_CONTAINER_NAME} >> /dev/null 2>&1
+    docker stop $PREPARE_CONTAINER_NAME >> /dev/null 2>&1
+    docker rm $PREPARE_CONTAINER_NAME >> /dev/null 2>&1
 
-    docker run --name=${PREPARE_CONTAINER_NAME} \
-        --env SCENARIO_NAME=${SCENARIO} \
+    docker run --name=$PREPARE_CONTAINER_NAME \
+        --env SCENARIO_NAME=$WORKING_SCENARIO \
         --volume $PATH_HOST_SCENARIOS:$PATH_PREPARE_INPUT \
         --volume $PATH_HOST_INPUT:$PATH_PREPARE_OUTPUT \
         --network none \
         --rm \
-        ${PREPARE_IMAGE_NAME}
+        $PREPARE_IMAGE_NAME
 
     if [ ! -f $PREPARE_CHECK ]; then
         echo "Scenarios are not prepared, please check for the errors"
@@ -84,67 +91,67 @@ run_prepare() {
 }
 
 run_database() {
-    PATH_HOST_DB_CONFIGURATION=${WORKING_DIRECTORY}/tmp/input/${WORKING_SCENARIO}/database.xml
-    PATH_DB_CONFIGURATION=/xml/${WORKING_SCENARIO}.xml
+    PATH_HOST_DB_CONFIGURATION=$WORKING_DIRECTORY/tmp/input/$WORKING_SCENARIO/database.xml
+    PATH_DB_CONFIGURATION=/xml/$WORKING_SCENARIO.xml
 
-    docker stop ${DATABASE_CONTAINER_NAME} >> /dev/null 2>&1
-    docker rm ${DATABASE_CONTAINER_NAME} >> /dev/null 2>&1
+    docker stop $DATABASE_CONTAINER_NAME >> /dev/null 2>&1
+    docker rm $DATABASE_CONTAINER_NAME >> /dev/null 2>&1
 
     if [ ! -f $PATH_HOST_DB_CONFIGURATION ]; then 
         return
     fi
 
-    docker run --name=${DATABASE_CONTAINER_NAME} \
-        --env SCENARIO=${WORKING_SCENARIO} \
+    docker run --name=$DATABASE_CONTAINER_NAME \
+        --env SCENARIO=$WORKING_SCENARIO \
+        --env RESULT_FILE=$DATABASE_RESULT_FILE \
         --env STAGE=$1 \
+        --env TZ=$TIMEZONE \
         --volume $PATH_HOST_DB_CONFIGURATION:$PATH_DB_CONFIGURATION \
+        --volume $PATH_HOST_OUTPUT:$PATH_DB_OUTPUT \
         --network host \
         --rm \
-        ${DATABASE_IMAGE_NAME}
-
+        $DATABASE_IMAGE_NAME
 }
  
 run_voip_patrol() {
-    PATH_HOST_VP_CONFIGURATION=$WORKING_DIRECTORY/tmp/input/${WORKING_SCENARIO}/voip_patrol.xml
-    PATH_VP_CONFIGURATION=/xml/${WORKING_SCENARIO}.xml
+    PATH_HOST_VP_CONFIGURATION=$WORKING_DIRECTORY/tmp/input/$WORKING_SCENARIO/voip_patrol.xml
+    PATH_VP_CONFIGURATION=/xml/$WORKING_SCENARIO.xml
 
     if [ ! -f $PATH_HOST_VP_CONFIGURATION ]; then
         return
     fi
 
-    docker run --name=${VP_CONTAINER_NAME} \
-    --env XML_CONF=${WORKING_SCENARIO} \
-    --env PORT=${VP_PORT} \
-    --env RESULT_FILE=${VP_RESULT_FILE} \
-    --env LOG_LEVEL=${VP_LOG_LEVEL} \
-    --env LOG_LEVEL_FILE=${VP_LOG_LEVEL_FILE} \
+    docker run --name=$VP_CONTAINER_NAME \
+    --env XML_CONF=$WORKING_SCENARIO \
+    --env PORT=$VP_PORT \
+    --env RESULT_FILE=$VP_RESULT_FILE \
+    --env LOG_LEVEL=$VP_LOG_LEVEL \
+    --env LOG_LEVEL_FILE=$VP_LOG_LEVEL_FILE \
     --volume $PATH_HOST_VP_CONFIGURATION:$PATH_VP_CONFIGURATION \
     --volume $PATH_HOST_OUTPUT:$PATH_VP_OUTPUT \
     --volume $PATH_HOST_VOICE_FILES:$PATH_VP_VOICE_FILES \
     --network host \
     --rm \
-    ${VP_IMAGE_NAME} 2>/dev/null
-
+    $VP_IMAGE_NAME
 }
 
 run_report() {
-    docker stop ${REPORT_CONTAINER_NAME} >> /dev/null 2>&1
-    docker rm ${REPORT_CONTAINER_NAME} >> /dev/null 2>&1
+    docker rm $REPORT_CONTAINER_NAME >> /dev/null 2>&1
 
-    docker run --name=${REPORT_CONTAINER_NAME} \
-        --env REPORT_FILE=${VP_RESULT_FILE} \
-        --env REPORT_TYPE=${REPORT_TYPE} \
-        --env MONIT_ADDRESS='<%= @monit_address %>' \
-        --env THRESHOLD_DEGRADED=<%= @threshold_degraded %> \
-        --env THRESHOLD_UNAVAILABLE=<%= @threshold_unavailable %> \
-        --env IS_SEND_TO_MONIT='<%= @is_send_to_monit %>' \
-        --env CONTACT='<%= @contact %>' \
+    docker run --name=$REPORT_CONTAINER_NAME \
+        --env VP_REPORT_FILE=$VP_RESULT_FILE \
+        --env DB_REPORT_FILE=$DATABASE_RESULT_FILE \
+        --env REPORT_TYPE=$REPORT_TYPE \
+        --env MONIT_ADDRESS=$MONIT_ADDRESS \
+        --env THRESHOLD_DEGRADED=$THRESHOLD_DEGRADED \
+        --env THRESHOLD_UNAVAILABLE=$THRESHOLD_UNAVAILABLE \
+        --env IS_SEND_TO_MONIT=$IS_SEND_TO_MONIT \
+        --env CONTACT=$CONTACT \
         --volume $PATH_HOST_INPUT:$PATH_REPORT_INPUT \
         --volume $PATH_HOST_OUTPUT:$PATH_REPORT_OUTPUT \
         --network host \
         --rm \
-        ${REPORT_IMAGE_NAME}
-
+        $REPORT_IMAGE_NAME
 }
 
 cleanup() {
