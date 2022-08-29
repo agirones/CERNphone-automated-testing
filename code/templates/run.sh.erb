@@ -132,7 +132,7 @@ run_voip_patrol() {
     --volume $PATH_HOST_VOICE_FILES:$PATH_VP_VOICE_FILES \
     --network host \
     --rm \
-    $VP_IMAGE_NAME
+    $VP_IMAGE_NAME 2>/dev/null
 }
 
 run_report() {
