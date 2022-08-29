@@ -168,18 +168,30 @@ trap cleanup EXIT
 
 pull_images
 
-rm -f $VP_PATH_RESULT_FILE
-rm -f $DATABASE_PATH_RESULT_FILE
-run_prepare
+if [ "$#" -eq 0 ]; then 
+    rm -f $VP_PATH_RESULT_FILE
+    rm -f $DATABASE_PATH_RESULT_FILE
+    run_prepare
 
-for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
-  if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
-      WORKING_SCENARIO=`basename ${DIRECTORY}`
-      run_database pre
-      run_voip_patrol
-      run_database post
-  fi
-done
+    for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
+      if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
+          WORKING_SCENARIO=`basename ${DIRECTORY}`
+          run_database pre
+          run_voip_patrol
+          run_database post
+      fi
+  done
+else
+    rm -f $VP_PATH_RESULT_FILE
+    rm -f $DATABASE_PATH_RESULT_FILE
 
+    for SCENARIO in "$@"; do
+        WORKING_SCENARIO=`basename ${SCENARIO} | cut -f 1 -d .`
+        run_prepare
+        run_database pre
+        run_voip_patrol
+        run_database post
+    done
+fi
 run_report
-rm -rf $LOCK_DIRECTORY
+rm -r $LOCK_DIRECTORY
