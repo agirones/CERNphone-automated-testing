@@ -11,7 +11,6 @@ class volts (
   $docker_username,
   $vp_result_file_name,
   $db_result_file_name,
-  $deploy_environment,
 ) {
 
   $_mirror = 'http://linuxsoft.cern.ch/mirror/download.docker.com'
