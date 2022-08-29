@@ -167,9 +167,10 @@ fi
 trap cleanup EXIT
 
 pull_images
-run_prepare
+
 rm -f $VP_PATH_RESULT_FILE
 rm -f $DATABASE_PATH_RESULT_FILE
+run_prepare
 
 for DIRECTORY in ${WORKING_DIRECTORY}/tmp/input/*; do
   if [ -f ${DIRECTORY}/voip_patrol.xml ]; then
