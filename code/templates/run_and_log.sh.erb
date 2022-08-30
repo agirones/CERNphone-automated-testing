@@ -4,7 +4,8 @@ FILE=$(date +\%y-\%m-\%d_\%H:\%M)
 /root/run.sh > /var/log/volts/$FILE.log
 
 if [[ $? -eq 0 ]]; then
-  cp /root/tmp/output/<%= @vp_result_file_name %> /var/log/volts/$FILE.jsonl
+  cp /root/tmp/output/<%= @db_result_file_name %> /var/log/volts/$FILE.jsonl
+  cat /root/tmp/output/<%= @vp_result_file_name %> >> /var/log/volts/$FILE.jsonl
 fi
 
 rm $(find . -mtime +<%= @logs_backup_days %>) 2>/dev/null

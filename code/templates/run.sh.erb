@@ -22,7 +22,7 @@ done
 WORKING_DIRECTORY=/root
 
 TIMEZONE=Europe/Paris
-CONTACT='ihor.olkhovskyi@cern.ch'
+EMAIL='ihor.olkhovskyi@cern.ch'
 
 # Volumes paths in host
 PATH_HOST_INPUT=$WORKING_DIRECTORY/tmp/input
@@ -146,7 +146,7 @@ run_report() {
         --env THRESHOLD_DEGRADED=$THRESHOLD_DEGRADED \
         --env THRESHOLD_UNAVAILABLE=$THRESHOLD_UNAVAILABLE \
         --env IS_SEND_TO_MONIT=$IS_SEND_TO_MONIT \
-        --env CONTACT=$CONTACT \
+        --env CONTACT=$EMAIL \
         --volume $PATH_HOST_INPUT:$PATH_REPORT_INPUT \
         --volume $PATH_HOST_OUTPUT:$PATH_REPORT_OUTPUT \
         --network host \
