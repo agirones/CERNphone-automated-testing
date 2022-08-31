@@ -50,8 +50,8 @@ In the next chart are all the currently supported ways to print the results of t
 | REPORT_TYPE | Output |
 | ----------- | ------ |
 | table_full  |<img src="docs/table_full.png" height="150" />|
-| table       |<img src="docs/table.png" height="150"} />|
-| json_full   |<img src="docs/json_full.png" height="150" />}|
+| table       |<img src="docs/table.png" height="150" />|
+| json_full   |<img src="docs/json_full1.png" height="150" /> <img src="docs/json_full2.png" height="150" />|
 | json        |<img src="docs/json.png" height="150" />|
 
 ### MONIT
