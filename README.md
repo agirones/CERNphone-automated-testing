@@ -48,10 +48,10 @@ tbag set --hg hg_tone/mgmt/volts funct-test-registry-read
 ## Report
 In the next chart are all the currently supported ways to print the results of the tests. To select any of those see `report_type` in [Configuration](#configuration)
 | REPORT_TYPE | Output |
-| ----------- | ------ |
-| table_full  |<img src="docs/table_full.png" />|
-| table       |<img src="docs/table.png" />|
-| json_full   |<img src="docs/json_full1.png" height="250" /> <img src="docs/json_full2.png" height="250" />|
+| :-----------: | ------ |
+| table_full  |<img src="docs/table_full.png" width="600" />|
+| table       |<img src="docs/table.png" width="600"/>|
+| json_full   |<img src="docs/json_full1.png" height="300" /> <img src="docs/json_full2.png" height="300" />|
 | json        |<img src="docs/json.png" />|
 
 ### MONIT
